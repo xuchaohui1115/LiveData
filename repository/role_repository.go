@@ -11,14 +11,14 @@ import (
 
 type IRoleRepository interface {
 	GetRoles(req *vo.RoleListRequest) ([]model.Role, int64, error)       // 获取角色列表
-	GetRolesByIds(roleIds []uint) ([]*model.Role, error)                 // 根据角色ID获取角色
+	GetRolesByIds(roleIds []int) ([]*model.Role, error)                  // 根据角色ID获取角色
 	CreateRole(role *model.Role) error                                   // 创建角色
-	UpdateRoleById(roleId uint, role *model.Role) error                  // 更新角色
-	GetRoleMenusById(roleId uint) ([]*model.Menu, error)                 // 获取角色的权限菜单
+	UpdateRoleById(roleId int, role *model.Role) error                   // 更新角色
+	GetRoleMenusById(roleId int) ([]*model.Menu, error)                  // 获取角色的权限菜单
 	UpdateRoleMenus(role *model.Role) error                              // 更新角色的权限菜单
-	GetRoleApisByRoleKeyword(roleKeyword string) ([]*model.Api, error)   // 根据角色关键字获取角色的权限接口
+	GetRoleApisByRoleKeyword(roleKeyword string) ([]*model.API, error)   // 根据角色关键字获取角色的权限接口
 	UpdateRoleApis(roleKeyword string, reqRolePolicies [][]string) error // 更新角色的权限接口（先全部删除再新增）
-	BatchDeleteRoleByIds(roleIds []uint) error                           // 删除角色
+	BatchDeleteRoleByIds(roleIds []int) error                            // 删除角色
 }
 
 type RoleRepository struct {
@@ -63,7 +63,7 @@ func (r RoleRepository) GetRoles(req *vo.RoleListRequest) ([]model.Role, int64, 
 }
 
 // 根据角色ID获取角色
-func (r RoleRepository) GetRolesByIds(roleIds []uint) ([]*model.Role, error) {
+func (r RoleRepository) GetRolesByIds(roleIds []int) ([]*model.Role, error) {
 	var list []*model.Role
 	err := common.DB.Where("id IN (?)", roleIds).Find(&list).Error
 	return list, err
@@ -76,13 +76,13 @@ func (r RoleRepository) CreateRole(role *model.Role) error {
 }
 
 // 更新角色
-func (r RoleRepository) UpdateRoleById(roleId uint, role *model.Role) error {
+func (r RoleRepository) UpdateRoleById(roleId int, role *model.Role) error {
 	err := common.DB.Model(&model.Role{}).Where("id = ?", roleId).Updates(role).Error
 	return err
 }
 
 // 获取角色的权限菜单
-func (r RoleRepository) GetRoleMenusById(roleId uint) ([]*model.Menu, error) {
+func (r RoleRepository) GetRoleMenusById(roleId int) ([]*model.Menu, error) {
 	var role model.Role
 	err := common.DB.Where("id = ?", roleId).Preload("Menus").First(&role).Error
 	return role.Menus, err
@@ -95,17 +95,17 @@ func (r RoleRepository) UpdateRoleMenus(role *model.Role) error {
 }
 
 // 根据角色关键字获取角色的权限接口
-func (r RoleRepository) GetRoleApisByRoleKeyword(roleKeyword string) ([]*model.Api, error) {
+func (r RoleRepository) GetRoleApisByRoleKeyword(roleKeyword string) ([]*model.API, error) {
 	policies := common.CasbinEnforcer.GetFilteredPolicy(0, roleKeyword)
 
 	// 获取所有接口
-	var apis []*model.Api
+	var apis []*model.API
 	err := common.DB.Find(&apis).Error
 	if err != nil {
 		return apis, errors.New("获取角色的权限接口失败")
 	}
 
-	accessApis := make([]*model.Api, 0)
+	accessApis := make([]*model.API, 0)
 
 	for _, policy := range policies {
 		path := policy[1]
@@ -149,7 +149,7 @@ func (r RoleRepository) UpdateRoleApis(roleKeyword string, reqRolePolicies [][]s
 }
 
 // 删除角色
-func (r RoleRepository) BatchDeleteRoleByIds(roleIds []uint) error {
+func (r RoleRepository) BatchDeleteRoleByIds(roleIds []int) error {
 	var roles []*model.Role
 	err := common.DB.Where("id IN (?)", roleIds).Find(&roles).Error
 	if err != nil {

@@ -14,8 +14,8 @@ type CreateUserRequest struct {
 	Avatar       string `form:"avatar" json:"avatar"`
 	Nickname     string `form:"nickname" json:"nickname" validate:"min=0,max=20"`
 	Introduction string `form:"introduction" json:"introduction" validate:"min=0,max=255"`
-	Status       uint   `form:"status" json:"status" validate:"oneof=1 2"`
-	RoleIds      []uint `form:"roleIds" json:"roleIds" validate:"required"`
+	Status       int    `form:"status" json:"status" validate:"oneof=1 2"`
+	RoleIds      []int  `form:"roleIds" json:"roleIds" validate:"required"`
 }
 
 // 获取用户列表结构体
@@ -23,14 +23,14 @@ type UserListRequest struct {
 	Username string `json:"username" form:"username" `
 	Mobile   string `json:"mobile" form:"mobile" `
 	Nickname string `json:"nickname" form:"nickname" `
-	Status   uint   `json:"status" form:"status" `
-	PageNum  uint   `json:"pageNum" form:"pageNum"`
-	PageSize uint   `json:"pageSize" form:"pageSize"`
+	Status   int    `json:"status" form:"status" `
+	PageNum  int    `json:"pageNum" form:"pageNum"`
+	PageSize int    `json:"pageSize" form:"pageSize"`
 }
 
 // 批量删除用户结构体
 type DeleteUserRequest struct {
-	UserIds []uint `json:"userIds" form:"userIds"`
+	UserIds []int `json:"userIds" form:"userIds"`
 }
 
 // 更新密码结构体

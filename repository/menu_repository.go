@@ -7,14 +7,14 @@ import (
 )
 
 type IMenuRepository interface {
-	GetMenus() ([]*model.Menu, error)                   // 获取菜单列表
-	GetMenuTree() ([]*model.Menu, error)                // 获取菜单树
-	CreateMenu(menu *model.Menu) error                  // 创建菜单
-	UpdateMenuById(menuId uint, menu *model.Menu) error // 更新菜单
-	BatchDeleteMenuByIds(menuIds []uint) error          // 批量删除菜单
+	GetMenus() ([]*model.Menu, error)                  // 获取菜单列表
+	GetMenuTree() ([]*model.Menu, error)               // 获取菜单树
+	CreateMenu(menu *model.Menu) error                 // 创建菜单
+	UpdateMenuById(menuId int, menu *model.Menu) error // 更新菜单
+	BatchDeleteMenuByIds(menuIds []int) error          // 批量删除菜单
 
-	GetUserMenusByUserId(userId uint) ([]*model.Menu, error)    // 根据用户ID获取用户的权限(可访问)菜单列表
-	GetUserMenuTreeByUserId(userId uint) ([]*model.Menu, error) // 根据用户ID获取用户的权限(可访问)菜单树
+	GetUserMenusByUserId(userId int) ([]*model.Menu, error)    // 根据用户ID获取用户的权限(可访问)菜单列表
+	GetUserMenuTreeByUserId(userId int) ([]*model.Menu, error) // 根据用户ID获取用户的权限(可访问)菜单树
 }
 
 type MenuRepository struct {
@@ -39,11 +39,11 @@ func (m MenuRepository) GetMenuTree() ([]*model.Menu, error) {
 	return GenMenuTree(0, menus), err
 }
 
-func GenMenuTree(parentId uint, menus []*model.Menu) []*model.Menu {
+func GenMenuTree(parentId int64, menus []*model.Menu) []*model.Menu {
 	tree := make([]*model.Menu, 0)
 
 	for _, m := range menus {
-		if *m.ParentId == parentId {
+		if m.ParentID == parentId {
 			children := GenMenuTree(m.ID, menus)
 			m.Children = children
 			tree = append(tree, m)
@@ -59,13 +59,13 @@ func (m MenuRepository) CreateMenu(menu *model.Menu) error {
 }
 
 // 更新菜单
-func (m MenuRepository) UpdateMenuById(menuId uint, menu *model.Menu) error {
+func (m MenuRepository) UpdateMenuById(menuId int, menu *model.Menu) error {
 	err := common.DB.Model(menu).Where("id = ?", menuId).Updates(menu).Error
 	return err
 }
 
 // 批量删除菜单
-func (m MenuRepository) BatchDeleteMenuByIds(menuIds []uint) error {
+func (m MenuRepository) BatchDeleteMenuByIds(menuIds []int) error {
 	var menus []*model.Menu
 	err := common.DB.Where("id IN (?)", menuIds).Find(&menus).Error
 	if err != nil {
@@ -76,7 +76,7 @@ func (m MenuRepository) BatchDeleteMenuByIds(menuIds []uint) error {
 }
 
 // 根据用户ID获取用户的权限(可访问)菜单列表
-func (m MenuRepository) GetUserMenusByUserId(userId uint) ([]*model.Menu, error) {
+func (m MenuRepository) GetUserMenusByUserId(userId int) ([]*model.Menu, error) {
 	// 获取用户
 	var user model.User
 	err := common.DB.Where("id = ?", userId).Preload("Roles").First(&user).Error
@@ -126,7 +126,7 @@ func (m MenuRepository) GetUserMenusByUserId(userId uint) ([]*model.Menu, error)
 }
 
 // 根据用户ID获取用户的权限(可访问)菜单树
-func (m MenuRepository) GetUserMenuTreeByUserId(userId uint) ([]*model.Menu, error) {
+func (m MenuRepository) GetUserMenuTreeByUserId(userId int) ([]*model.Menu, error) {
 	menus, err := m.GetUserMenusByUserId(userId)
 	if err != nil {
 		return nil, err

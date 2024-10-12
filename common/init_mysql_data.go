@@ -20,28 +20,28 @@ func InitData() {
 	newRoles := make([]*model.Role, 0)
 	roles := []*model.Role{
 		{
-			Model:   gorm.Model{ID: 1},
+			ID:      1,
 			Name:    "管理员",
 			Keyword: "admin",
-			Desc:    new(string),
+			Desc:    "",
 			Sort:    1,
 			Status:  1,
 			Creator: "系统",
 		},
 		{
-			Model:   gorm.Model{ID: 2},
+			ID:      2,
 			Name:    "普通用户",
 			Keyword: "user",
-			Desc:    new(string),
+			Desc:    "",
 			Sort:    3,
 			Status:  1,
 			Creator: "系统",
 		},
 		{
-			Model:   gorm.Model{ID: 3},
+			ID:      3,
 			Name:    "访客",
 			Keyword: "guest",
-			Desc:    new(string),
+			Desc:    "",
 			Sort:    5,
 			Status:  1,
 			Creator: "系统",
@@ -64,8 +64,8 @@ func InitData() {
 
 	// 2写入菜单
 	newMenus := make([]model.Menu, 0)
-	var uint0 uint = 0
-	var uint1 uint = 1
+	//var uint0 uint = 0
+	//var uint1 uint = 1
 	componentStr := "component"
 	systemUserStr := "/system/user"
 	userStr := "user"
@@ -75,91 +75,91 @@ func InitData() {
 	exampleStr := "example"
 	logOperationStr := "/log/operation-log"
 	documentationStr := "documentation"
-	var uint6 uint = 6
+	//var uint6 uint = 6
 	menus := []model.Menu{
 		{
-			Model:     gorm.Model{ID: 1},
+			ID:        1,
 			Name:      "System",
 			Title:     "系统管理",
-			Icon:      &componentStr,
+			Icon:      componentStr,
 			Path:      "/system",
 			Component: "Layout",
-			Redirect:  &systemUserStr,
+			Redirect:  systemUserStr,
 			Sort:      10,
-			ParentId:  &uint0,
+			ParentID:  0,
 			Roles:     roles[:1],
 			Creator:   "系统",
 		},
 		{
-			Model:     gorm.Model{ID: 2},
+			ID:        2,
 			Name:      "User",
 			Title:     "用户管理",
-			Icon:      &userStr,
+			Icon:      userStr,
 			Path:      "user",
 			Component: "/system/user/index",
 			Sort:      11,
-			ParentId:  &uint1,
+			ParentID:  1,
 			Roles:     roles[:1],
 			Creator:   "系统",
 		},
 		{
-			Model:     gorm.Model{ID: 3},
+			ID:        3,
 			Name:      "Role",
 			Title:     "角色管理",
-			Icon:      &peoplesStr,
+			Icon:      peoplesStr,
 			Path:      "role",
 			Component: "/system/role/index",
 			Sort:      12,
-			ParentId:  &uint1,
+			ParentID:  1,
 			Roles:     roles[:1],
 			Creator:   "系统",
 		},
 		{
-			Model:     gorm.Model{ID: 4},
+			ID:        4,
 			Name:      "Menu",
 			Title:     "菜单管理",
-			Icon:      &treeTableStr,
+			Icon:      treeTableStr,
 			Path:      "menu",
 			Component: "/system/menu/index",
 			Sort:      13,
-			ParentId:  &uint1,
+			ParentID:  1,
 			Roles:     roles[:1],
 			Creator:   "系统",
 		},
 		{
-			Model:     gorm.Model{ID: 5},
+			ID:        5,
 			Name:      "Api",
 			Title:     "接口管理",
-			Icon:      &treeStr,
+			Icon:      treeStr,
 			Path:      "api",
 			Component: "/system/api/index",
 			Sort:      14,
-			ParentId:  &uint1,
+			ParentID:  1,
 			Roles:     roles[:1],
 			Creator:   "系统",
 		},
 		{
-			Model:     gorm.Model{ID: 6},
+			ID:        6,
 			Name:      "Log",
 			Title:     "日志管理",
-			Icon:      &exampleStr,
+			Icon:      exampleStr,
 			Path:      "/log",
 			Component: "Layout",
-			Redirect:  &logOperationStr,
+			Redirect:  logOperationStr,
 			Sort:      20,
-			ParentId:  &uint0,
+			ParentID:  0,
 			Roles:     roles[:2],
 			Creator:   "系统",
 		},
 		{
-			Model:     gorm.Model{ID: 7},
+			ID:        7,
 			Name:      "OperationLog",
 			Title:     "操作日志",
-			Icon:      &documentationStr,
+			Icon:      documentationStr,
 			Path:      "operation-log",
 			Component: "/log/operation-log/index",
 			Sort:      21,
-			ParentId:  &uint6,
+			ParentID:  6,
 			Roles:     roles[:2],
 			Creator:   "系统",
 		},
@@ -181,49 +181,49 @@ func InitData() {
 	newUsers := make([]model.User, 0)
 	users := []model.User{
 		{
-			Model:        gorm.Model{ID: 1},
+			ID:           1,
 			Username:     "admin",
 			Password:     util.GenPasswd("123456"),
 			Mobile:       "18888888888",
 			Avatar:       "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-			Nickname:     new(string),
-			Introduction: new(string),
+			Nickname:     "",
+			Introduction: "",
 			Status:       1,
 			Creator:      "系统",
 			Roles:        roles[:1],
 		},
 		{
-			Model:        gorm.Model{ID: 2},
+			ID:           2,
 			Username:     "faker",
 			Password:     util.GenPasswd("123456"),
 			Mobile:       "19999999999",
 			Avatar:       "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-			Nickname:     new(string),
-			Introduction: new(string),
+			Nickname:     "",
+			Introduction: "",
 			Status:       1,
 			Creator:      "系统",
 			Roles:        roles[:2],
 		},
 		{
-			Model:        gorm.Model{ID: 3},
+			ID:           3,
 			Username:     "nike",
 			Password:     util.GenPasswd("123456"),
 			Mobile:       "13333333333",
 			Avatar:       "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-			Nickname:     new(string),
-			Introduction: new(string),
+			Nickname:     "",
+			Introduction: "",
 			Status:       1,
 			Creator:      "系统",
 			Roles:        roles[1:2],
 		},
 		{
-			Model:        gorm.Model{ID: 4},
+			ID:           4,
 			Username:     "bob",
 			Password:     util.GenPasswd("123456"),
 			Mobile:       "15555555555",
 			Avatar:       "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-			Nickname:     new(string),
-			Introduction: new(string),
+			Nickname:     "",
+			Introduction: "",
 			Status:       1,
 			Creator:      "系统",
 			Roles:        roles[2:3],
@@ -245,7 +245,7 @@ func InitData() {
 	}
 
 	// 4.写入api
-	apis := []model.Api{
+	apis := []model.API{
 		{
 			Method:   "POST",
 			Path:     "/base/login",
@@ -464,10 +464,10 @@ func InitData() {
 			Creator:  "系统",
 		},
 	}
-	newApi := make([]model.Api, 0)
+	newApi := make([]model.API, 0)
 	newRoleCasbin := make([]model.RoleCasbin, 0)
 	for i, api := range apis {
-		api.ID = uint(i + 1)
+		api.ID = int64(i + 1)
 		err := DB.First(&api, api.ID).Error
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			newApi = append(newApi, api)

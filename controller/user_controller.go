@@ -181,7 +181,7 @@ func (uc UserController) CreateUser(c *gin.Context) {
 		reqRoleSorts = append(reqRoleSorts, int(role.Sort))
 	}
 	// 前端传来用户角色排序最小值（最高等级角色）
-	reqRoleSortMin := uint(funk.MinInt(reqRoleSorts).(int))
+	reqRoleSortMin := funk.MinInt(reqRoleSorts).(int)
 
 	// 当前用户的角色排序最小值 需要小于 前端传来的角色排序最小值（用户不能创建比自己等级高的或者相同等级的用户）
 	if currentRoleSortMin >= reqRoleSortMin {
@@ -198,9 +198,9 @@ func (uc UserController) CreateUser(c *gin.Context) {
 		Password:     util.GenPasswd(req.Password),
 		Mobile:       req.Mobile,
 		Avatar:       req.Avatar,
-		Nickname:     &req.Nickname,
-		Introduction: &req.Introduction,
-		Status:       req.Status,
+		Nickname:     req.Nickname,
+		Introduction: req.Introduction,
+		Status:       int64(req.Status),
 		Creator:      ctxUser.Username,
 		Roles:        roles,
 	}
@@ -237,7 +237,7 @@ func (uc UserController) UpdateUserById(c *gin.Context) {
 	}
 
 	// 根据path中的userId获取用户信息
-	oldUser, err := uc.UserRepository.GetUserById(uint(userId))
+	oldUser, err := uc.UserRepository.GetUserById(userId)
 	if err != nil {
 		response.Fail(c, nil, "获取需要更新的用户信息失败: "+err.Error())
 		return
@@ -254,10 +254,10 @@ func (uc UserController) UpdateUserById(c *gin.Context) {
 	// 获取当前用户角色的排序，和前端传来的角色排序做比较
 	var currentRoleSorts []int
 	// 当前用户角色ID集合
-	var currentRoleIds []uint
+	var currentRoleIds []int
 	for _, role := range currentRoles {
 		currentRoleSorts = append(currentRoleSorts, int(role.Sort))
-		currentRoleIds = append(currentRoleIds, role.ID)
+		currentRoleIds = append(currentRoleIds, int(role.ID))
 	}
 	// 当前用户角色排序最小值（最高等级角色）
 	currentRoleSortMin := funk.MinInt(currentRoleSorts).(int)
@@ -283,14 +283,14 @@ func (uc UserController) UpdateUserById(c *gin.Context) {
 	reqRoleSortMin := funk.MinInt(reqRoleSorts).(int)
 
 	user := model.User{
-		Model:        oldUser.Model,
+		ID:           oldUser.ID,
 		Username:     req.Username,
 		Password:     oldUser.Password,
 		Mobile:       req.Mobile,
 		Avatar:       req.Avatar,
-		Nickname:     &req.Nickname,
-		Introduction: &req.Introduction,
-		Status:       req.Status,
+		Nickname:     req.Nickname,
+		Introduction: req.Introduction,
+		Status:       int64(req.Status),
 		Creator:      ctxUser.Username,
 		Roles:        roles,
 	}
@@ -322,7 +322,7 @@ func (uc UserController) UpdateUserById(c *gin.Context) {
 		// 如果是更新别人
 		// 用户不能更新比自己角色等级高的或者相同等级的用户
 		// 根据path中的userIdID获取用户角色排序最小值
-		minRoleSorts, err := uc.UserRepository.GetUserMinRoleSortsByIds([]uint{uint(userId)})
+		minRoleSorts, err := uc.UserRepository.GetUserMinRoleSortsByIds([]int{userId})
 		if err != nil || len(minRoleSorts) == 0 {
 			response.Fail(c, nil, "根据用户ID获取用户角色排序最小值失败")
 			return

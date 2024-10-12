@@ -90,9 +90,9 @@ func (rc RoleController) CreateRole(c *gin.Context) {
 	role := model.Role{
 		Name:    req.Name,
 		Keyword: req.Keyword,
-		Desc:    &req.Desc,
-		Status:  req.Status,
-		Sort:    req.Sort,
+		Desc:    req.Desc,
+		Status:  int64(req.Status),
+		Sort:    int64(req.Sort),
 		Creator: ctxUser.Username,
 	}
 
@@ -137,7 +137,7 @@ func (rc RoleController) UpdateRoleById(c *gin.Context) {
 
 	// 不能更新比自己角色等级高或相等的角色
 	// 根据path中的角色ID获取该角色信息
-	roles, err := rc.RoleRepository.GetRolesByIds([]uint{uint(roleId)})
+	roles, err := rc.RoleRepository.GetRolesByIds([]int{roleId})
 	if err != nil {
 		response.Fail(c, nil, err.Error())
 		return
@@ -146,7 +146,7 @@ func (rc RoleController) UpdateRoleById(c *gin.Context) {
 		response.Fail(c, nil, "未获取到角色信息")
 		return
 	}
-	if minSort >= roles[0].Sort {
+	if minSort >= int(roles[0].Sort) {
 		response.Fail(c, nil, "不能更新比自己角色等级高或相等的角色")
 		return
 	}
@@ -160,14 +160,14 @@ func (rc RoleController) UpdateRoleById(c *gin.Context) {
 	role := model.Role{
 		Name:    req.Name,
 		Keyword: req.Keyword,
-		Desc:    &req.Desc,
-		Status:  req.Status,
-		Sort:    req.Sort,
+		Desc:    req.Desc,
+		Status:  int64(req.Status),
+		Sort:    int64(req.Sort),
 		Creator: ctxUser.Username,
 	}
 
 	// 更新角色
-	err = rc.RoleRepository.UpdateRoleById(uint(roleId), &role)
+	err = rc.RoleRepository.UpdateRoleById(roleId, &role)
 	if err != nil {
 		response.Fail(c, nil, "更新角色失败: "+err.Error())
 		return
@@ -233,7 +233,7 @@ func (rc RoleController) GetRoleMenusById(c *gin.Context) {
 		response.Fail(c, nil, "角色ID不正确")
 		return
 	}
-	menus, err := rc.RoleRepository.GetRoleMenusById(uint(roleId))
+	menus, err := rc.RoleRepository.GetRoleMenusById(roleId)
 	if err != nil {
 		response.Fail(c, nil, "获取角色的权限菜单失败: "+err.Error())
 		return
@@ -262,7 +262,7 @@ func (rc RoleController) UpdateRoleMenusById(c *gin.Context) {
 		return
 	}
 	// 根据path中的角色ID获取该角色信息
-	roles, err := rc.RoleRepository.GetRolesByIds([]uint{uint(roleId)})
+	roles, err := rc.RoleRepository.GetRolesByIds([]int{roleId})
 	if err != nil {
 		response.Fail(c, nil, err.Error())
 		return
@@ -282,7 +282,7 @@ func (rc RoleController) UpdateRoleMenusById(c *gin.Context) {
 
 	// (非管理员)不能更新比自己角色等级高或相等角色的权限菜单
 	if minSort != 1 {
-		if minSort >= roles[0].Sort {
+		if minSort >= int(roles[0].Sort) {
 			response.Fail(c, nil, "不能更新比自己角色等级高或相等角色的权限菜单")
 			return
 		}
@@ -290,16 +290,16 @@ func (rc RoleController) UpdateRoleMenusById(c *gin.Context) {
 
 	// 获取当前用户所拥有的权限菜单
 	mr := repository.NewMenuRepository()
-	ctxUserMenus, err := mr.GetUserMenusByUserId(ctxUser.ID)
+	ctxUserMenus, err := mr.GetUserMenusByUserId(int(ctxUser.ID))
 	if err != nil {
 		response.Fail(c, nil, "获取当前用户的可访问菜单列表失败: "+err.Error())
 		return
 	}
 
 	// 获取当前用户所拥有的权限菜单ID
-	ctxUserMenusIds := make([]uint, 0)
+	ctxUserMenusIds := make([]int, 0)
 	for _, menu := range ctxUserMenus {
-		ctxUserMenusIds = append(ctxUserMenusIds, menu.ID)
+		ctxUserMenusIds = append(ctxUserMenusIds, int(menu.ID))
 	}
 
 	// 前端传来最新的MenuIds集合
@@ -319,7 +319,7 @@ func (rc RoleController) UpdateRoleMenusById(c *gin.Context) {
 
 		for _, id := range menuIds {
 			for _, menu := range ctxUserMenus {
-				if id == menu.ID {
+				if id == int(menu.ID) {
 					reqMenus = append(reqMenus, menu)
 					break
 				}
@@ -335,7 +335,7 @@ func (rc RoleController) UpdateRoleMenusById(c *gin.Context) {
 		}
 		for _, menuId := range menuIds {
 			for _, menu := range menus {
-				if menuId == menu.ID {
+				if menuId == int(menu.ID) {
 					reqMenus = append(reqMenus, menu)
 				}
 			}
@@ -363,7 +363,7 @@ func (rc RoleController) GetRoleApisById(c *gin.Context) {
 		return
 	}
 	// 根据path中的角色ID获取该角色信息
-	roles, err := rc.RoleRepository.GetRolesByIds([]uint{uint(roleId)})
+	roles, err := rc.RoleRepository.GetRolesByIds([]int{roleId})
 	if err != nil {
 		response.Fail(c, nil, err.Error())
 		return
@@ -404,7 +404,7 @@ func (rc RoleController) UpdateRoleApisById(c *gin.Context) {
 		return
 	}
 	// 根据path中的角色ID获取该角色信息
-	roles, err := rc.RoleRepository.GetRolesByIds([]uint{uint(roleId)})
+	roles, err := rc.RoleRepository.GetRolesByIds([]int{roleId})
 	if err != nil {
 		response.Fail(c, nil, err.Error())
 		return
@@ -424,7 +424,7 @@ func (rc RoleController) UpdateRoleApisById(c *gin.Context) {
 
 	// (非管理员)不能更新比自己角色等级高或相等角色的权限接口
 	if minSort != 1 {
-		if minSort >= roles[0].Sort {
+		if minSort >= int(roles[0].Sort) {
 			response.Fail(c, nil, "不能更新比自己角色等级高或相等角色的权限接口")
 			return
 		}
@@ -518,7 +518,7 @@ func (rc RoleController) BatchDeleteRoleByIds(c *gin.Context) {
 
 	// 不能删除比自己角色等级高或相等的角色
 	for _, role := range roles {
-		if minSort >= role.Sort {
+		if minSort >= int(role.Sort) {
 			response.Fail(c, nil, "不能删除比自己角色等级高或相等的角色")
 			return
 		}

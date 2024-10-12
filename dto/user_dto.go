@@ -4,7 +4,7 @@ import "LiveData/model"
 
 // 返回给前端的当前用户信息
 type UserInfoDto struct {
-	ID           uint          `json:"id"`
+	ID           int64         `json:"id"`
 	Username     string        `json:"username"`
 	Mobile       string        `json:"mobile"`
 	Avatar       string        `json:"avatar"`
@@ -19,23 +19,23 @@ func ToUserInfoDto(user model.User) UserInfoDto {
 		Username:     user.Username,
 		Mobile:       user.Mobile,
 		Avatar:       user.Avatar,
-		Nickname:     *user.Nickname,
-		Introduction: *user.Introduction,
+		Nickname:     user.Nickname,
+		Introduction: user.Introduction,
 		Roles:        user.Roles,
 	}
 }
 
 // 返回给前端的用户列表
 type UsersDto struct {
-	ID           uint   `json:"ID"`
+	ID           int64  `json:"ID"`
 	Username     string `json:"username"`
 	Mobile       string `json:"mobile"`
 	Avatar       string `json:"avatar"`
 	Nickname     string `json:"nickname"`
 	Introduction string `json:"introduction"`
-	Status       uint   `json:"status"`
+	Status       int    `json:"status"`
 	Creator      string `json:"creator"`
-	RoleIds      []uint `json:"roleIds"`
+	RoleIds      []int  `json:"roleIds"`
 }
 
 func ToUsersDto(userList []*model.User) []UsersDto {
@@ -46,14 +46,14 @@ func ToUsersDto(userList []*model.User) []UsersDto {
 			Username:     user.Username,
 			Mobile:       user.Mobile,
 			Avatar:       user.Avatar,
-			Nickname:     *user.Nickname,
-			Introduction: *user.Introduction,
-			Status:       user.Status,
+			Nickname:     user.Nickname,
+			Introduction: user.Introduction,
+			Status:       int(user.Status),
 			Creator:      user.Creator,
 		}
-		roleIds := make([]uint, 0)
+		roleIds := make([]int, 0)
 		for _, role := range user.Roles {
-			roleIds = append(roleIds, role.ID)
+			roleIds = append(roleIds, int(role.ID))
 		}
 		userDto.RoleIds = roleIds
 		users = append(users, userDto)

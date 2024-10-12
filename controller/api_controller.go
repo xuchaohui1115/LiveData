@@ -89,7 +89,7 @@ func (ac ApiController) CreateApi(c *gin.Context) {
 		return
 	}
 
-	api := model.Api{
+	api := model.API{
 		Method:   req.Method,
 		Path:     req.Path,
 		Category: req.Category,
@@ -138,7 +138,7 @@ func (ac ApiController) UpdateApiById(c *gin.Context) {
 		return
 	}
 
-	api := model.Api{
+	api := model.API{
 		Method:   req.Method,
 		Path:     req.Path,
 		Category: req.Category,
@@ -146,7 +146,7 @@ func (ac ApiController) UpdateApiById(c *gin.Context) {
 		Creator:  ctxUser.Username,
 	}
 
-	err = ac.ApiRepository.UpdateApiById(uint(apiId), &api)
+	err = ac.ApiRepository.UpdateApiById(apiId, &api)
 	if err != nil {
 		response.Fail(c, nil, "更新接口失败: "+err.Error())
 		return

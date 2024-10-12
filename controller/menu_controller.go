@@ -78,18 +78,18 @@ func (mc MenuController) CreateMenu(c *gin.Context) {
 	menu := model.Menu{
 		Name:       req.Name,
 		Title:      req.Title,
-		Icon:       &req.Icon,
+		Icon:       req.Icon,
 		Path:       req.Path,
-		Redirect:   &req.Redirect,
+		Redirect:   req.Redirect,
 		Component:  req.Component,
-		Sort:       req.Sort,
-		Status:     req.Status,
-		Hidden:     req.Hidden,
-		NoCache:    req.NoCache,
-		AlwaysShow: req.AlwaysShow,
-		Breadcrumb: req.Breadcrumb,
-		ActiveMenu: &req.ActiveMenu,
-		ParentId:   &req.ParentId,
+		Sort:       int64(req.Sort),
+		Status:     int64(req.Status),
+		Hidden:     int64(req.Hidden),
+		NoCache:    int64(req.NoCache),
+		AlwaysShow: int64(req.AlwaysShow),
+		Breadcrumb: int64(req.Breadcrumb),
+		ActiveMenu: req.ActiveMenu,
+		ParentID:   int64(req.ParentId),
 		Creator:    ctxUser.Username,
 	}
 
@@ -134,22 +134,22 @@ func (mc MenuController) UpdateMenuById(c *gin.Context) {
 	menu := model.Menu{
 		Name:       req.Name,
 		Title:      req.Title,
-		Icon:       &req.Icon,
+		Icon:       req.Icon,
 		Path:       req.Path,
-		Redirect:   &req.Redirect,
+		Redirect:   req.Redirect,
 		Component:  req.Component,
-		Sort:       req.Sort,
-		Status:     req.Status,
-		Hidden:     req.Hidden,
-		NoCache:    req.NoCache,
-		AlwaysShow: req.AlwaysShow,
-		Breadcrumb: req.Breadcrumb,
-		ActiveMenu: &req.ActiveMenu,
-		ParentId:   &req.ParentId,
+		Sort:       int64(req.Sort),
+		Status:     int64(req.Status),
+		Hidden:     int64(req.Hidden),
+		NoCache:    int64(req.NoCache),
+		AlwaysShow: int64(req.AlwaysShow),
+		Breadcrumb: int64(req.Breadcrumb),
+		ActiveMenu: req.ActiveMenu,
+		ParentID:   int64(req.ParentId),
 		Creator:    ctxUser.Username,
 	}
 
-	err = mc.MenuRepository.UpdateMenuById(uint(menuId), &menu)
+	err = mc.MenuRepository.UpdateMenuById(menuId, &menu)
 	if err != nil {
 		response.Fail(c, nil, "更新菜单失败: "+err.Error())
 		return
@@ -191,7 +191,7 @@ func (mc MenuController) GetUserMenusByUserId(c *gin.Context) {
 		return
 	}
 
-	menus, err := mc.MenuRepository.GetUserMenusByUserId(uint(userId))
+	menus, err := mc.MenuRepository.GetUserMenusByUserId(userId)
 	if err != nil {
 		response.Fail(c, nil, "获取用户的可访问菜单列表失败: "+err.Error())
 		return
@@ -208,7 +208,7 @@ func (mc MenuController) GetUserMenuTreeByUserId(c *gin.Context) {
 		return
 	}
 
-	menuTree, err := mc.MenuRepository.GetUserMenuTreeByUserId(uint(userId))
+	menuTree, err := mc.MenuRepository.GetUserMenuTreeByUserId(userId)
 	if err != nil {
 		response.Fail(c, nil, "获取用户的可访问菜单树失败: "+err.Error())
 		return

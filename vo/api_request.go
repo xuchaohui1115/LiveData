@@ -6,8 +6,8 @@ type ApiListRequest struct {
 	Path     string `json:"path" form:"path"`
 	Category string `json:"category" form:"category"`
 	Creator  string `json:"creator" form:"creator"`
-	PageNum  uint   `json:"pageNum" form:"pageNum"`
-	PageSize uint   `json:"pageSize" form:"pageSize"`
+	PageNum  int    `json:"pageNum" form:"pageNum"`
+	PageSize int    `json:"pageSize" form:"pageSize"`
 }
 
 // 创建接口结构体
@@ -28,5 +28,5 @@ type UpdateApiRequest struct {
 
 // 批量删除接口结构体
 type DeleteApiRequest struct {
-	ApiIds []uint `json:"apiIds" form:"apiIds"`
+	ApiIds []int `json:"apiIds" form:"apiIds"`
 }

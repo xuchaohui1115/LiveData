@@ -6,7 +6,6 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap/zapcore"
-	"log"
 	"os"
 )
 
@@ -60,8 +59,7 @@ func InitConfig() {
 	// 读取rsa key
 	Conf.System.RSAPublicBytes = util.RSAReadKeyFromFile(Conf.System.RSAPublicKey)
 	Conf.System.RSAPrivateBytes = util.RSAReadKeyFromFile(Conf.System.RSAPrivateKey)
-	log.Println(Conf.System.RSAPublicKey)
-	log.Println(Conf.System.RSAPrivateKey)
+
 }
 
 type SystemConfig struct {
