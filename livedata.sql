@@ -21,9 +21,13 @@ CREATE TABLE `violations` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `host_nickname` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '主播昵称',
     `host_id` BIGINT NOT NULL DEFAULT 0 COMMENT '主播ID',  -- 使用 BIGINT 以防 ID 超出 INT 范围
+    `uid` BIGINT NOT NULL DEFAULT 0 COMMENT 'uid',
+    `mcn_name` VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'MCN名称',
     `security_code` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '安全码',
     `account_status` ENUM('active', 'suspended', 'banned') NOT NULL DEFAULT 'active' COMMENT '账号状态',
     `violation_number` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '违规编号',
+    `violation_type` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '违规类型',
+    `violation_effect` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '违规影响',
     `violation_time` BIGINT NOT NULL DEFAULT 0 COMMENT '违规时间（Unix 时间戳）',
     `violation_reason` TEXT NOT NULL COMMENT '违规原因',
     `violation_impact` TEXT NOT NULL COMMENT '违规影响',

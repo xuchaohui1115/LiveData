@@ -50,6 +50,8 @@ func InitRoutes() *gin.Engine {
 	InitMenuRoutes(apiGroup, authMiddleware)         // 注册菜单路由, jwt认证中间件,casbin鉴权中间件
 	InitApiRoutes(apiGroup, authMiddleware)          // 注册接口路由, jwt认证中间件,casbin鉴权中间件
 	InitOperationLogRoutes(apiGroup, authMiddleware) // 注册操作日志路由, jwt认证中间件,casbin鉴权中间件
+	InitAnchorRoutes(apiGroup, authMiddleware)       // 注册主播路由, jwt认证中间件,casbin鉴权中间件
+	InitIllegalRoutes(apiGroup, authMiddleware)      // 注册主播路由, jwt认证中间件,casbin鉴权中间件
 
 	common.Log.Info("初始化路由完成！")
 	return r
