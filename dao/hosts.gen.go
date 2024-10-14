@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"demo20220320/model"
+	"LiveData/model"
 )
 
 func newHost(db *gorm.DB, opts ...gen.DOOption) host {

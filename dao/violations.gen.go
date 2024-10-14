@@ -5,6 +5,7 @@
 package dao
 
 import (
+	"LiveData/model"
 	"context"
 
 	"gorm.io/gorm"
@@ -15,46 +16,52 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"demo20220320/model"
 )
 
-func newViolation(db *gorm.DB, opts ...gen.DOOption) violation {
-	_violation := violation{}
+func newViolations(db *gorm.DB, opts ...gen.DOOption) violations {
+	_violations := violations{}
 
-	_violation.violationDo.UseDB(db, opts...)
-	_violation.violationDo.UseModel(&model.Violation{})
+	_violations.violationsDo.UseDB(db, opts...)
+	_violations.violationsDo.UseModel(&model.Violations{})
 
-	tableName := _violation.violationDo.TableName()
-	_violation.ALL = field.NewAsterisk(tableName)
-	_violation.ID = field.NewInt64(tableName, "id")
-	_violation.HostNickname = field.NewString(tableName, "host_nickname")
-	_violation.HostID = field.NewInt64(tableName, "host_id")
-	_violation.SecurityCode = field.NewString(tableName, "security_code")
-	_violation.AccountStatus = field.NewString(tableName, "account_status")
-	_violation.ViolationNumber = field.NewString(tableName, "violation_number")
-	_violation.ViolationTime = field.NewInt64(tableName, "violation_time")
-	_violation.ViolationReason = field.NewString(tableName, "violation_reason")
-	_violation.ViolationImpact = field.NewString(tableName, "violation_impact")
-	_violation.ViolationLiveRoomID = field.NewString(tableName, "violation_live_room_id")
-	_violation.CreatedAt = field.NewInt64(tableName, "created_at")
+	tableName := _violations.violationsDo.TableName()
+	_violations.ALL = field.NewAsterisk(tableName)
+	_violations.ID = field.NewInt64(tableName, "id")
+	_violations.HostNickname = field.NewString(tableName, "host_nickname")
+	_violations.HostID = field.NewInt64(tableName, "host_id")
+	_violations.UID = field.NewInt64(tableName, "uid")
+	_violations.McnName = field.NewString(tableName, "mcn_name")
+	_violations.SecurityCode = field.NewString(tableName, "security_code")
+	_violations.AccountStatus = field.NewString(tableName, "account_status")
+	_violations.ViolationNumber = field.NewString(tableName, "violation_number")
+	_violations.ViolationType = field.NewString(tableName, "violation_type")
+	_violations.ViolationEffect = field.NewString(tableName, "violation_effect")
+	_violations.ViolationTime = field.NewInt64(tableName, "violation_time")
+	_violations.ViolationReason = field.NewString(tableName, "violation_reason")
+	_violations.ViolationImpact = field.NewString(tableName, "violation_impact")
+	_violations.ViolationLiveRoomID = field.NewString(tableName, "violation_live_room_id")
+	_violations.CreatedAt = field.NewInt64(tableName, "created_at")
 
-	_violation.fillFieldMap()
+	_violations.fillFieldMap()
 
-	return _violation
+	return _violations
 }
 
-// violation 违规记录表
-type violation struct {
-	violationDo
+// violations 违规记录表
+type violations struct {
+	violationsDo
 
 	ALL                 field.Asterisk
 	ID                  field.Int64  // 主键ID
 	HostNickname        field.String // 主播昵称
 	HostID              field.Int64  // 主播ID
+	UID                 field.Int64  // uid
+	McnName             field.String // MCN名称
 	SecurityCode        field.String // 安全码
 	AccountStatus       field.String // 账号状态
 	ViolationNumber     field.String // 违规编号
+	ViolationType       field.String // 违规类型
+	ViolationEffect     field.String // 违规影响
 	ViolationTime       field.Int64  // 违规时间（Unix 时间戳）
 	ViolationReason     field.String // 违规原因
 	ViolationImpact     field.String // 违规影响
@@ -64,24 +71,28 @@ type violation struct {
 	fieldMap map[string]field.Expr
 }
 
-func (v violation) Table(newTableName string) *violation {
-	v.violationDo.UseTable(newTableName)
+func (v violations) Table(newTableName string) *violations {
+	v.violationsDo.UseTable(newTableName)
 	return v.updateTableName(newTableName)
 }
 
-func (v violation) As(alias string) *violation {
-	v.violationDo.DO = *(v.violationDo.As(alias).(*gen.DO))
+func (v violations) As(alias string) *violations {
+	v.violationsDo.DO = *(v.violationsDo.As(alias).(*gen.DO))
 	return v.updateTableName(alias)
 }
 
-func (v *violation) updateTableName(table string) *violation {
+func (v *violations) updateTableName(table string) *violations {
 	v.ALL = field.NewAsterisk(table)
 	v.ID = field.NewInt64(table, "id")
 	v.HostNickname = field.NewString(table, "host_nickname")
 	v.HostID = field.NewInt64(table, "host_id")
+	v.UID = field.NewInt64(table, "uid")
+	v.McnName = field.NewString(table, "mcn_name")
 	v.SecurityCode = field.NewString(table, "security_code")
 	v.AccountStatus = field.NewString(table, "account_status")
 	v.ViolationNumber = field.NewString(table, "violation_number")
+	v.ViolationType = field.NewString(table, "violation_type")
+	v.ViolationEffect = field.NewString(table, "violation_effect")
 	v.ViolationTime = field.NewInt64(table, "violation_time")
 	v.ViolationReason = field.NewString(table, "violation_reason")
 	v.ViolationImpact = field.NewString(table, "violation_impact")
@@ -93,7 +104,7 @@ func (v *violation) updateTableName(table string) *violation {
 	return v
 }
 
-func (v *violation) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+func (v *violations) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := v.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
@@ -102,14 +113,18 @@ func (v *violation) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	return _oe, ok
 }
 
-func (v *violation) fillFieldMap() {
-	v.fieldMap = make(map[string]field.Expr, 11)
+func (v *violations) fillFieldMap() {
+	v.fieldMap = make(map[string]field.Expr, 15)
 	v.fieldMap["id"] = v.ID
 	v.fieldMap["host_nickname"] = v.HostNickname
 	v.fieldMap["host_id"] = v.HostID
+	v.fieldMap["uid"] = v.UID
+	v.fieldMap["mcn_name"] = v.McnName
 	v.fieldMap["security_code"] = v.SecurityCode
 	v.fieldMap["account_status"] = v.AccountStatus
 	v.fieldMap["violation_number"] = v.ViolationNumber
+	v.fieldMap["violation_type"] = v.ViolationType
+	v.fieldMap["violation_effect"] = v.ViolationEffect
 	v.fieldMap["violation_time"] = v.ViolationTime
 	v.fieldMap["violation_reason"] = v.ViolationReason
 	v.fieldMap["violation_impact"] = v.ViolationImpact
@@ -117,58 +132,58 @@ func (v *violation) fillFieldMap() {
 	v.fieldMap["created_at"] = v.CreatedAt
 }
 
-func (v violation) clone(db *gorm.DB) violation {
-	v.violationDo.ReplaceConnPool(db.Statement.ConnPool)
+func (v violations) clone(db *gorm.DB) violations {
+	v.violationsDo.ReplaceConnPool(db.Statement.ConnPool)
 	return v
 }
 
-func (v violation) replaceDB(db *gorm.DB) violation {
-	v.violationDo.ReplaceDB(db)
+func (v violations) replaceDB(db *gorm.DB) violations {
+	v.violationsDo.ReplaceDB(db)
 	return v
 }
 
-type violationDo struct{ gen.DO }
+type violationsDo struct{ gen.DO }
 
-type IViolationDo interface {
+type IViolationsDo interface {
 	gen.SubQuery
-	Debug() IViolationDo
-	WithContext(ctx context.Context) IViolationDo
+	Debug() IViolationsDo
+	WithContext(ctx context.Context) IViolationsDo
 	WithResult(fc func(tx gen.Dao)) gen.ResultInfo
 	ReplaceDB(db *gorm.DB)
-	ReadDB() IViolationDo
-	WriteDB() IViolationDo
+	ReadDB() IViolationsDo
+	WriteDB() IViolationsDo
 	As(alias string) gen.Dao
-	Session(config *gorm.Session) IViolationDo
+	Session(config *gorm.Session) IViolationsDo
 	Columns(cols ...field.Expr) gen.Columns
-	Clauses(conds ...clause.Expression) IViolationDo
-	Not(conds ...gen.Condition) IViolationDo
-	Or(conds ...gen.Condition) IViolationDo
-	Select(conds ...field.Expr) IViolationDo
-	Where(conds ...gen.Condition) IViolationDo
-	Order(conds ...field.Expr) IViolationDo
-	Distinct(cols ...field.Expr) IViolationDo
-	Omit(cols ...field.Expr) IViolationDo
-	Join(table schema.Tabler, on ...field.Expr) IViolationDo
-	LeftJoin(table schema.Tabler, on ...field.Expr) IViolationDo
-	RightJoin(table schema.Tabler, on ...field.Expr) IViolationDo
-	Group(cols ...field.Expr) IViolationDo
-	Having(conds ...gen.Condition) IViolationDo
-	Limit(limit int) IViolationDo
-	Offset(offset int) IViolationDo
+	Clauses(conds ...clause.Expression) IViolationsDo
+	Not(conds ...gen.Condition) IViolationsDo
+	Or(conds ...gen.Condition) IViolationsDo
+	Select(conds ...field.Expr) IViolationsDo
+	Where(conds ...gen.Condition) IViolationsDo
+	Order(conds ...field.Expr) IViolationsDo
+	Distinct(cols ...field.Expr) IViolationsDo
+	Omit(cols ...field.Expr) IViolationsDo
+	Join(table schema.Tabler, on ...field.Expr) IViolationsDo
+	LeftJoin(table schema.Tabler, on ...field.Expr) IViolationsDo
+	RightJoin(table schema.Tabler, on ...field.Expr) IViolationsDo
+	Group(cols ...field.Expr) IViolationsDo
+	Having(conds ...gen.Condition) IViolationsDo
+	Limit(limit int) IViolationsDo
+	Offset(offset int) IViolationsDo
 	Count() (count int64, err error)
-	Scopes(funcs ...func(gen.Dao) gen.Dao) IViolationDo
-	Unscoped() IViolationDo
-	Create(values ...*model.Violation) error
-	CreateInBatches(values []*model.Violation, batchSize int) error
-	Save(values ...*model.Violation) error
-	First() (*model.Violation, error)
-	Take() (*model.Violation, error)
-	Last() (*model.Violation, error)
-	Find() ([]*model.Violation, error)
-	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Violation, err error)
-	FindInBatches(result *[]*model.Violation, batchSize int, fc func(tx gen.Dao, batch int) error) error
+	Scopes(funcs ...func(gen.Dao) gen.Dao) IViolationsDo
+	Unscoped() IViolationsDo
+	Create(values ...*model.Violations) error
+	CreateInBatches(values []*model.Violations, batchSize int) error
+	Save(values ...*model.Violations) error
+	First() (*model.Violations, error)
+	Take() (*model.Violations, error)
+	Last() (*model.Violations, error)
+	Find() ([]*model.Violations, error)
+	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Violations, err error)
+	FindInBatches(result *[]*model.Violations, batchSize int, fc func(tx gen.Dao, batch int) error) error
 	Pluck(column field.Expr, dest interface{}) error
-	Delete(...*model.Violation) (info gen.ResultInfo, err error)
+	Delete(...*model.Violations) (info gen.ResultInfo, err error)
 	Update(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
 	UpdateSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
 	Updates(value interface{}) (info gen.ResultInfo, err error)
@@ -176,163 +191,163 @@ type IViolationDo interface {
 	UpdateColumnSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
 	UpdateColumns(value interface{}) (info gen.ResultInfo, err error)
 	UpdateFrom(q gen.SubQuery) gen.Dao
-	Attrs(attrs ...field.AssignExpr) IViolationDo
-	Assign(attrs ...field.AssignExpr) IViolationDo
-	Joins(fields ...field.RelationField) IViolationDo
-	Preload(fields ...field.RelationField) IViolationDo
-	FirstOrInit() (*model.Violation, error)
-	FirstOrCreate() (*model.Violation, error)
-	FindByPage(offset int, limit int) (result []*model.Violation, count int64, err error)
+	Attrs(attrs ...field.AssignExpr) IViolationsDo
+	Assign(attrs ...field.AssignExpr) IViolationsDo
+	Joins(fields ...field.RelationField) IViolationsDo
+	Preload(fields ...field.RelationField) IViolationsDo
+	FirstOrInit() (*model.Violations, error)
+	FirstOrCreate() (*model.Violations, error)
+	FindByPage(offset int, limit int) (result []*model.Violations, count int64, err error)
 	ScanByPage(result interface{}, offset int, limit int) (count int64, err error)
 	Scan(result interface{}) (err error)
-	Returning(value interface{}, columns ...string) IViolationDo
+	Returning(value interface{}, columns ...string) IViolationsDo
 	UnderlyingDB() *gorm.DB
 	schema.Tabler
 }
 
-func (v violationDo) Debug() IViolationDo {
+func (v violationsDo) Debug() IViolationsDo {
 	return v.withDO(v.DO.Debug())
 }
 
-func (v violationDo) WithContext(ctx context.Context) IViolationDo {
+func (v violationsDo) WithContext(ctx context.Context) IViolationsDo {
 	return v.withDO(v.DO.WithContext(ctx))
 }
 
-func (v violationDo) ReadDB() IViolationDo {
+func (v violationsDo) ReadDB() IViolationsDo {
 	return v.Clauses(dbresolver.Read)
 }
 
-func (v violationDo) WriteDB() IViolationDo {
+func (v violationsDo) WriteDB() IViolationsDo {
 	return v.Clauses(dbresolver.Write)
 }
 
-func (v violationDo) Session(config *gorm.Session) IViolationDo {
+func (v violationsDo) Session(config *gorm.Session) IViolationsDo {
 	return v.withDO(v.DO.Session(config))
 }
 
-func (v violationDo) Clauses(conds ...clause.Expression) IViolationDo {
+func (v violationsDo) Clauses(conds ...clause.Expression) IViolationsDo {
 	return v.withDO(v.DO.Clauses(conds...))
 }
 
-func (v violationDo) Returning(value interface{}, columns ...string) IViolationDo {
+func (v violationsDo) Returning(value interface{}, columns ...string) IViolationsDo {
 	return v.withDO(v.DO.Returning(value, columns...))
 }
 
-func (v violationDo) Not(conds ...gen.Condition) IViolationDo {
+func (v violationsDo) Not(conds ...gen.Condition) IViolationsDo {
 	return v.withDO(v.DO.Not(conds...))
 }
 
-func (v violationDo) Or(conds ...gen.Condition) IViolationDo {
+func (v violationsDo) Or(conds ...gen.Condition) IViolationsDo {
 	return v.withDO(v.DO.Or(conds...))
 }
 
-func (v violationDo) Select(conds ...field.Expr) IViolationDo {
+func (v violationsDo) Select(conds ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.Select(conds...))
 }
 
-func (v violationDo) Where(conds ...gen.Condition) IViolationDo {
+func (v violationsDo) Where(conds ...gen.Condition) IViolationsDo {
 	return v.withDO(v.DO.Where(conds...))
 }
 
-func (v violationDo) Order(conds ...field.Expr) IViolationDo {
+func (v violationsDo) Order(conds ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.Order(conds...))
 }
 
-func (v violationDo) Distinct(cols ...field.Expr) IViolationDo {
+func (v violationsDo) Distinct(cols ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.Distinct(cols...))
 }
 
-func (v violationDo) Omit(cols ...field.Expr) IViolationDo {
+func (v violationsDo) Omit(cols ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.Omit(cols...))
 }
 
-func (v violationDo) Join(table schema.Tabler, on ...field.Expr) IViolationDo {
+func (v violationsDo) Join(table schema.Tabler, on ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.Join(table, on...))
 }
 
-func (v violationDo) LeftJoin(table schema.Tabler, on ...field.Expr) IViolationDo {
+func (v violationsDo) LeftJoin(table schema.Tabler, on ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.LeftJoin(table, on...))
 }
 
-func (v violationDo) RightJoin(table schema.Tabler, on ...field.Expr) IViolationDo {
+func (v violationsDo) RightJoin(table schema.Tabler, on ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.RightJoin(table, on...))
 }
 
-func (v violationDo) Group(cols ...field.Expr) IViolationDo {
+func (v violationsDo) Group(cols ...field.Expr) IViolationsDo {
 	return v.withDO(v.DO.Group(cols...))
 }
 
-func (v violationDo) Having(conds ...gen.Condition) IViolationDo {
+func (v violationsDo) Having(conds ...gen.Condition) IViolationsDo {
 	return v.withDO(v.DO.Having(conds...))
 }
 
-func (v violationDo) Limit(limit int) IViolationDo {
+func (v violationsDo) Limit(limit int) IViolationsDo {
 	return v.withDO(v.DO.Limit(limit))
 }
 
-func (v violationDo) Offset(offset int) IViolationDo {
+func (v violationsDo) Offset(offset int) IViolationsDo {
 	return v.withDO(v.DO.Offset(offset))
 }
 
-func (v violationDo) Scopes(funcs ...func(gen.Dao) gen.Dao) IViolationDo {
+func (v violationsDo) Scopes(funcs ...func(gen.Dao) gen.Dao) IViolationsDo {
 	return v.withDO(v.DO.Scopes(funcs...))
 }
 
-func (v violationDo) Unscoped() IViolationDo {
+func (v violationsDo) Unscoped() IViolationsDo {
 	return v.withDO(v.DO.Unscoped())
 }
 
-func (v violationDo) Create(values ...*model.Violation) error {
+func (v violationsDo) Create(values ...*model.Violations) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return v.DO.Create(values)
 }
 
-func (v violationDo) CreateInBatches(values []*model.Violation, batchSize int) error {
+func (v violationsDo) CreateInBatches(values []*model.Violations, batchSize int) error {
 	return v.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (v violationDo) Save(values ...*model.Violation) error {
+func (v violationsDo) Save(values ...*model.Violations) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return v.DO.Save(values)
 }
 
-func (v violationDo) First() (*model.Violation, error) {
+func (v violationsDo) First() (*model.Violations, error) {
 	if result, err := v.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Violation), nil
+		return result.(*model.Violations), nil
 	}
 }
 
-func (v violationDo) Take() (*model.Violation, error) {
+func (v violationsDo) Take() (*model.Violations, error) {
 	if result, err := v.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Violation), nil
+		return result.(*model.Violations), nil
 	}
 }
 
-func (v violationDo) Last() (*model.Violation, error) {
+func (v violationsDo) Last() (*model.Violations, error) {
 	if result, err := v.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Violation), nil
+		return result.(*model.Violations), nil
 	}
 }
 
-func (v violationDo) Find() ([]*model.Violation, error) {
+func (v violationsDo) Find() ([]*model.Violations, error) {
 	result, err := v.DO.Find()
-	return result.([]*model.Violation), err
+	return result.([]*model.Violations), err
 }
 
-func (v violationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Violation, err error) {
-	buf := make([]*model.Violation, 0, batchSize)
+func (v violationsDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Violations, err error) {
+	buf := make([]*model.Violations, 0, batchSize)
 	err = v.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -340,49 +355,49 @@ func (v violationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) e
 	return results, err
 }
 
-func (v violationDo) FindInBatches(result *[]*model.Violation, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (v violationsDo) FindInBatches(result *[]*model.Violations, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return v.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (v violationDo) Attrs(attrs ...field.AssignExpr) IViolationDo {
+func (v violationsDo) Attrs(attrs ...field.AssignExpr) IViolationsDo {
 	return v.withDO(v.DO.Attrs(attrs...))
 }
 
-func (v violationDo) Assign(attrs ...field.AssignExpr) IViolationDo {
+func (v violationsDo) Assign(attrs ...field.AssignExpr) IViolationsDo {
 	return v.withDO(v.DO.Assign(attrs...))
 }
 
-func (v violationDo) Joins(fields ...field.RelationField) IViolationDo {
+func (v violationsDo) Joins(fields ...field.RelationField) IViolationsDo {
 	for _, _f := range fields {
 		v = *v.withDO(v.DO.Joins(_f))
 	}
 	return &v
 }
 
-func (v violationDo) Preload(fields ...field.RelationField) IViolationDo {
+func (v violationsDo) Preload(fields ...field.RelationField) IViolationsDo {
 	for _, _f := range fields {
 		v = *v.withDO(v.DO.Preload(_f))
 	}
 	return &v
 }
 
-func (v violationDo) FirstOrInit() (*model.Violation, error) {
+func (v violationsDo) FirstOrInit() (*model.Violations, error) {
 	if result, err := v.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Violation), nil
+		return result.(*model.Violations), nil
 	}
 }
 
-func (v violationDo) FirstOrCreate() (*model.Violation, error) {
+func (v violationsDo) FirstOrCreate() (*model.Violations, error) {
 	if result, err := v.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Violation), nil
+		return result.(*model.Violations), nil
 	}
 }
 
-func (v violationDo) FindByPage(offset int, limit int) (result []*model.Violation, count int64, err error) {
+func (v violationsDo) FindByPage(offset int, limit int) (result []*model.Violations, count int64, err error) {
 	result, err = v.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -397,7 +412,7 @@ func (v violationDo) FindByPage(offset int, limit int) (result []*model.Violatio
 	return
 }
 
-func (v violationDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+func (v violationsDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
 	count, err = v.Count()
 	if err != nil {
 		return
@@ -407,15 +422,15 @@ func (v violationDo) ScanByPage(result interface{}, offset int, limit int) (coun
 	return
 }
 
-func (v violationDo) Scan(result interface{}) (err error) {
+func (v violationsDo) Scan(result interface{}) (err error) {
 	return v.DO.Scan(result)
 }
 
-func (v violationDo) Delete(models ...*model.Violation) (result gen.ResultInfo, err error) {
+func (v violationsDo) Delete(models ...*model.Violations) (result gen.ResultInfo, err error) {
 	return v.DO.Delete(models)
 }
 
-func (v *violationDo) withDO(do gen.Dao) *violationDo {
+func (v *violationsDo) withDO(do gen.Dao) *violationsDo {
 	v.DO = *do.(*gen.DO)
 	return v
 }

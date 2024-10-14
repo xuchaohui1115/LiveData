@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"demo20220320/model"
+	"LiveData/model"
 )
 
 func newPauseRecord(db *gorm.DB, opts ...gen.DOOption) pauseRecord {

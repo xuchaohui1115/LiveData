@@ -20,7 +20,7 @@ var (
 	API          *aPI
 	CasbinRule   *casbinRule
 	Host         *host
-	LiveDatum    *liveDatum
+	LiveDatum    *liveData
 	LiveDetail   *liveDetail
 	Menu         *menu
 	OperationLog *operationLog
@@ -30,7 +30,7 @@ var (
 	SuperAdmin   *superAdmin
 	User         *user
 	UserRole     *userRole
-	Violation    *violation
+	Violation    *violations
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -57,7 +57,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		API:          newAPI(db, opts...),
 		CasbinRule:   newCasbinRule(db, opts...),
 		Host:         newHost(db, opts...),
-		LiveDatum:    newLiveDatum(db, opts...),
+		LiveDatum:    newLiveData(db, opts...),
 		LiveDetail:   newLiveDetail(db, opts...),
 		Menu:         newMenu(db, opts...),
 		OperationLog: newOperationLog(db, opts...),
@@ -67,7 +67,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		SuperAdmin:   newSuperAdmin(db, opts...),
 		User:         newUser(db, opts...),
 		UserRole:     newUserRole(db, opts...),
-		Violation:    newViolation(db, opts...),
+		Violation:    newViolations(db, opts...),
 	}
 }
 
@@ -77,7 +77,7 @@ type Query struct {
 	API          aPI
 	CasbinRule   casbinRule
 	Host         host
-	LiveDatum    liveDatum
+	LiveDatum    liveData
 	LiveDetail   liveDetail
 	Menu         menu
 	OperationLog operationLog
@@ -87,7 +87,7 @@ type Query struct {
 	SuperAdmin   superAdmin
 	User         user
 	UserRole     userRole
-	Violation    violation
+	Violation    violations
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -144,7 +144,7 @@ type queryCtx struct {
 	API          IAPIDo
 	CasbinRule   ICasbinRuleDo
 	Host         IHostDo
-	LiveDatum    ILiveDatumDo
+	LiveDatum    ILiveDataDo
 	LiveDetail   ILiveDetailDo
 	Menu         IMenuDo
 	OperationLog IOperationLogDo
@@ -154,7 +154,7 @@ type queryCtx struct {
 	SuperAdmin   ISuperAdminDo
 	User         IUserDo
 	UserRole     IUserRoleDo
-	Violation    IViolationDo
+	Violation    IViolationsDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {

@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"demo20220320/model"
+	"LiveData/model"
 )
 
 func newUserRole(db *gorm.DB, opts ...gen.DOOption) userRole {

@@ -5,6 +5,7 @@
 package dao
 
 import (
+	"LiveData/model"
 	"context"
 
 	"gorm.io/gorm"
@@ -15,8 +16,6 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"demo20220320/model"
 )
 
 func newAPI(db *gorm.DB, opts ...gen.DOOption) aPI {
