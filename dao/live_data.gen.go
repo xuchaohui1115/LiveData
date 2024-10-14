@@ -5,6 +5,7 @@
 package dao
 
 import (
+	"LiveData/model"
 	"context"
 
 	"gorm.io/gorm"
@@ -15,52 +16,67 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"demo20220320/model"
 )
 
-func newLiveDatum(db *gorm.DB, opts ...gen.DOOption) liveDatum {
-	_liveDatum := liveDatum{}
+func newLiveData(db *gorm.DB, opts ...gen.DOOption) liveData {
+	_liveData := liveData{}
 
-	_liveDatum.liveDatumDo.UseDB(db, opts...)
-	_liveDatum.liveDatumDo.UseModel(&model.LiveDatum{})
+	_liveData.liveDataDo.UseDB(db, opts...)
+	_liveData.liveDataDo.UseModel(&model.LiveData{})
 
-	tableName := _liveDatum.liveDatumDo.TableName()
-	_liveDatum.ALL = field.NewAsterisk(tableName)
-	_liveDatum.ID = field.NewInt64(tableName, "id")
-	_liveDatum.HostNickname = field.NewString(tableName, "host_nickname")
-	_liveDatum.HostID = field.NewInt64(tableName, "host_id")
-	_liveDatum.LiveStatus = field.NewString(tableName, "live_status")
-	_liveDatum.HostStatus = field.NewString(tableName, "host_status")
-	_liveDatum.Remarks = field.NewString(tableName, "remarks")
-	_liveDatum.LiveDuration = field.NewInt64(tableName, "live_duration")
-	_liveDatum.PaymentAmount = field.NewFloat64(tableName, "payment_amount")
-	_liveDatum.ViewCount = field.NewInt64(tableName, "view_count")
-	_liveDatum.ClickThroughRate = field.NewFloat64(tableName, "click_through_rate")
-	_liveDatum.ConversionRate = field.NewFloat64(tableName, "conversion_rate")
-	_liveDatum.TransactionCount = field.NewInt64(tableName, "transaction_count")
-	_liveDatum.TransactionItems = field.NewInt64(tableName, "transaction_items")
-	_liveDatum.YesterdaySales = field.NewFloat64(tableName, "yesterday_sales")
-	_liveDatum.PauseCount = field.NewInt64(tableName, "pause_count")
-	_liveDatum.PauseRecordID = field.NewInt64(tableName, "pause_record_id")
-	_liveDatum.CreatedAt = field.NewInt64(tableName, "created_at")
-	_liveDatum.UpdatedAt = field.NewInt64(tableName, "updated_at")
+	tableName := _liveData.liveDataDo.TableName()
+	_liveData.ALL = field.NewAsterisk(tableName)
+	_liveData.ID = field.NewInt64(tableName, "id")
+	_liveData.HostNickname = field.NewString(tableName, "host_nickname")
+	_liveData.TbAccount = field.NewString(tableName, "tb_account")
+	_liveData.McnName = field.NewString(tableName, "mcn_name")
+	_liveData.Phone = field.NewString(tableName, "phone")
+	_liveData.ContactPerson = field.NewString(tableName, "contact_person")
+	_liveData.UsersCount = field.NewString(tableName, "users_count")
+	_liveData.HostID = field.NewInt64(tableName, "host_id")
+	_liveData.UID = field.NewInt64(tableName, "uid")
+	_liveData.LiveStatus = field.NewString(tableName, "live_status")
+	_liveData.HostStatus = field.NewString(tableName, "host_status")
+	_liveData.LoginStatus = field.NewString(tableName, "login_status")
+	_liveData.Remarks = field.NewString(tableName, "remarks")
+	_liveData.LiveDuration = field.NewInt64(tableName, "live_duration")
+	_liveData.PaymentAmount = field.NewFloat64(tableName, "payment_amount")
+	_liveData.ViewCount = field.NewInt64(tableName, "view_count")
+	_liveData.ClickThroughRate = field.NewFloat64(tableName, "click_through_rate")
+	_liveData.ConversionRate = field.NewFloat64(tableName, "conversion_rate")
+	_liveData.TransactionCount = field.NewInt64(tableName, "transaction_count")
+	_liveData.TransactionItems = field.NewInt64(tableName, "transaction_items")
+	_liveData.YesterdaySales = field.NewFloat64(tableName, "yesterday_sales")
+	_liveData.AllSales = field.NewFloat64(tableName, "all_sales")
+	_liveData.MonthSales = field.NewFloat64(tableName, "month_sales")
+	_liveData.PauseCount = field.NewInt64(tableName, "pause_count")
+	_liveData.PauseRecordID = field.NewInt64(tableName, "pause_record_id")
+	_liveData.LiveRoomID = field.NewInt64(tableName, "live_room_id")
+	_liveData.CreatedAt = field.NewInt64(tableName, "created_at")
+	_liveData.UpdatedAt = field.NewInt64(tableName, "updated_at")
 
-	_liveDatum.fillFieldMap()
+	_liveData.fillFieldMap()
 
-	return _liveDatum
+	return _liveData
 }
 
-// liveDatum 直播数据表
-type liveDatum struct {
-	liveDatumDo
+// liveData 直播数据表
+type liveData struct {
+	liveDataDo
 
 	ALL              field.Asterisk
 	ID               field.Int64   // 主键ID
 	HostNickname     field.String  // 主播昵称
+	TbAccount        field.String  // 淘宝账号
+	McnName          field.String  // MCN名称
+	Phone            field.String  // 手机号码
+	ContactPerson    field.String  // 对接人
+	UsersCount       field.String  // 在线人数
 	HostID           field.Int64   // 主播ID
+	UID              field.Int64   // uid
 	LiveStatus       field.String  // 直播状态
 	HostStatus       field.String  // 主播状态
+	LoginStatus      field.String  // 登录状态
 	Remarks          field.String  // 备注
 	LiveDuration     field.Int64   // 直播时长（以分钟为单位）
 	PaymentAmount    field.Float64 // 支付金额
@@ -70,31 +86,41 @@ type liveDatum struct {
 	TransactionCount field.Int64   // 成交人数
 	TransactionItems field.Int64   // 成交件数
 	YesterdaySales   field.Float64 // 昨日成交
+	AllSales         field.Float64 // 总成交
+	MonthSales       field.Float64 // 月销售
 	PauseCount       field.Int64   // 暂停次数
 	PauseRecordID    field.Int64   // 暂停记录表ID，用于关联
+	LiveRoomID       field.Int64   // 直播间ID，主键
 	CreatedAt        field.Int64   // 创建时间（Unix 时间戳）
 	UpdatedAt        field.Int64   // 修改时间（Unix 时间戳）
 
 	fieldMap map[string]field.Expr
 }
 
-func (l liveDatum) Table(newTableName string) *liveDatum {
-	l.liveDatumDo.UseTable(newTableName)
+func (l liveData) Table(newTableName string) *liveData {
+	l.liveDataDo.UseTable(newTableName)
 	return l.updateTableName(newTableName)
 }
 
-func (l liveDatum) As(alias string) *liveDatum {
-	l.liveDatumDo.DO = *(l.liveDatumDo.As(alias).(*gen.DO))
+func (l liveData) As(alias string) *liveData {
+	l.liveDataDo.DO = *(l.liveDataDo.As(alias).(*gen.DO))
 	return l.updateTableName(alias)
 }
 
-func (l *liveDatum) updateTableName(table string) *liveDatum {
+func (l *liveData) updateTableName(table string) *liveData {
 	l.ALL = field.NewAsterisk(table)
 	l.ID = field.NewInt64(table, "id")
 	l.HostNickname = field.NewString(table, "host_nickname")
+	l.TbAccount = field.NewString(table, "tb_account")
+	l.McnName = field.NewString(table, "mcn_name")
+	l.Phone = field.NewString(table, "phone")
+	l.ContactPerson = field.NewString(table, "contact_person")
+	l.UsersCount = field.NewString(table, "users_count")
 	l.HostID = field.NewInt64(table, "host_id")
+	l.UID = field.NewInt64(table, "uid")
 	l.LiveStatus = field.NewString(table, "live_status")
 	l.HostStatus = field.NewString(table, "host_status")
+	l.LoginStatus = field.NewString(table, "login_status")
 	l.Remarks = field.NewString(table, "remarks")
 	l.LiveDuration = field.NewInt64(table, "live_duration")
 	l.PaymentAmount = field.NewFloat64(table, "payment_amount")
@@ -104,8 +130,11 @@ func (l *liveDatum) updateTableName(table string) *liveDatum {
 	l.TransactionCount = field.NewInt64(table, "transaction_count")
 	l.TransactionItems = field.NewInt64(table, "transaction_items")
 	l.YesterdaySales = field.NewFloat64(table, "yesterday_sales")
+	l.AllSales = field.NewFloat64(table, "all_sales")
+	l.MonthSales = field.NewFloat64(table, "month_sales")
 	l.PauseCount = field.NewInt64(table, "pause_count")
 	l.PauseRecordID = field.NewInt64(table, "pause_record_id")
+	l.LiveRoomID = field.NewInt64(table, "live_room_id")
 	l.CreatedAt = field.NewInt64(table, "created_at")
 	l.UpdatedAt = field.NewInt64(table, "updated_at")
 
@@ -114,7 +143,7 @@ func (l *liveDatum) updateTableName(table string) *liveDatum {
 	return l
 }
 
-func (l *liveDatum) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+func (l *liveData) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := l.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
@@ -123,13 +152,20 @@ func (l *liveDatum) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	return _oe, ok
 }
 
-func (l *liveDatum) fillFieldMap() {
-	l.fieldMap = make(map[string]field.Expr, 18)
+func (l *liveData) fillFieldMap() {
+	l.fieldMap = make(map[string]field.Expr, 28)
 	l.fieldMap["id"] = l.ID
 	l.fieldMap["host_nickname"] = l.HostNickname
+	l.fieldMap["tb_account"] = l.TbAccount
+	l.fieldMap["mcn_name"] = l.McnName
+	l.fieldMap["phone"] = l.Phone
+	l.fieldMap["contact_person"] = l.ContactPerson
+	l.fieldMap["users_count"] = l.UsersCount
 	l.fieldMap["host_id"] = l.HostID
+	l.fieldMap["uid"] = l.UID
 	l.fieldMap["live_status"] = l.LiveStatus
 	l.fieldMap["host_status"] = l.HostStatus
+	l.fieldMap["login_status"] = l.LoginStatus
 	l.fieldMap["remarks"] = l.Remarks
 	l.fieldMap["live_duration"] = l.LiveDuration
 	l.fieldMap["payment_amount"] = l.PaymentAmount
@@ -139,64 +175,67 @@ func (l *liveDatum) fillFieldMap() {
 	l.fieldMap["transaction_count"] = l.TransactionCount
 	l.fieldMap["transaction_items"] = l.TransactionItems
 	l.fieldMap["yesterday_sales"] = l.YesterdaySales
+	l.fieldMap["all_sales"] = l.AllSales
+	l.fieldMap["month_sales"] = l.MonthSales
 	l.fieldMap["pause_count"] = l.PauseCount
 	l.fieldMap["pause_record_id"] = l.PauseRecordID
+	l.fieldMap["live_room_id"] = l.LiveRoomID
 	l.fieldMap["created_at"] = l.CreatedAt
 	l.fieldMap["updated_at"] = l.UpdatedAt
 }
 
-func (l liveDatum) clone(db *gorm.DB) liveDatum {
-	l.liveDatumDo.ReplaceConnPool(db.Statement.ConnPool)
+func (l liveData) clone(db *gorm.DB) liveData {
+	l.liveDataDo.ReplaceConnPool(db.Statement.ConnPool)
 	return l
 }
 
-func (l liveDatum) replaceDB(db *gorm.DB) liveDatum {
-	l.liveDatumDo.ReplaceDB(db)
+func (l liveData) replaceDB(db *gorm.DB) liveData {
+	l.liveDataDo.ReplaceDB(db)
 	return l
 }
 
-type liveDatumDo struct{ gen.DO }
+type liveDataDo struct{ gen.DO }
 
-type ILiveDatumDo interface {
+type ILiveDataDo interface {
 	gen.SubQuery
-	Debug() ILiveDatumDo
-	WithContext(ctx context.Context) ILiveDatumDo
+	Debug() ILiveDataDo
+	WithContext(ctx context.Context) ILiveDataDo
 	WithResult(fc func(tx gen.Dao)) gen.ResultInfo
 	ReplaceDB(db *gorm.DB)
-	ReadDB() ILiveDatumDo
-	WriteDB() ILiveDatumDo
+	ReadDB() ILiveDataDo
+	WriteDB() ILiveDataDo
 	As(alias string) gen.Dao
-	Session(config *gorm.Session) ILiveDatumDo
+	Session(config *gorm.Session) ILiveDataDo
 	Columns(cols ...field.Expr) gen.Columns
-	Clauses(conds ...clause.Expression) ILiveDatumDo
-	Not(conds ...gen.Condition) ILiveDatumDo
-	Or(conds ...gen.Condition) ILiveDatumDo
-	Select(conds ...field.Expr) ILiveDatumDo
-	Where(conds ...gen.Condition) ILiveDatumDo
-	Order(conds ...field.Expr) ILiveDatumDo
-	Distinct(cols ...field.Expr) ILiveDatumDo
-	Omit(cols ...field.Expr) ILiveDatumDo
-	Join(table schema.Tabler, on ...field.Expr) ILiveDatumDo
-	LeftJoin(table schema.Tabler, on ...field.Expr) ILiveDatumDo
-	RightJoin(table schema.Tabler, on ...field.Expr) ILiveDatumDo
-	Group(cols ...field.Expr) ILiveDatumDo
-	Having(conds ...gen.Condition) ILiveDatumDo
-	Limit(limit int) ILiveDatumDo
-	Offset(offset int) ILiveDatumDo
+	Clauses(conds ...clause.Expression) ILiveDataDo
+	Not(conds ...gen.Condition) ILiveDataDo
+	Or(conds ...gen.Condition) ILiveDataDo
+	Select(conds ...field.Expr) ILiveDataDo
+	Where(conds ...gen.Condition) ILiveDataDo
+	Order(conds ...field.Expr) ILiveDataDo
+	Distinct(cols ...field.Expr) ILiveDataDo
+	Omit(cols ...field.Expr) ILiveDataDo
+	Join(table schema.Tabler, on ...field.Expr) ILiveDataDo
+	LeftJoin(table schema.Tabler, on ...field.Expr) ILiveDataDo
+	RightJoin(table schema.Tabler, on ...field.Expr) ILiveDataDo
+	Group(cols ...field.Expr) ILiveDataDo
+	Having(conds ...gen.Condition) ILiveDataDo
+	Limit(limit int) ILiveDataDo
+	Offset(offset int) ILiveDataDo
 	Count() (count int64, err error)
-	Scopes(funcs ...func(gen.Dao) gen.Dao) ILiveDatumDo
-	Unscoped() ILiveDatumDo
-	Create(values ...*model.LiveDatum) error
-	CreateInBatches(values []*model.LiveDatum, batchSize int) error
-	Save(values ...*model.LiveDatum) error
-	First() (*model.LiveDatum, error)
-	Take() (*model.LiveDatum, error)
-	Last() (*model.LiveDatum, error)
-	Find() ([]*model.LiveDatum, error)
-	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.LiveDatum, err error)
-	FindInBatches(result *[]*model.LiveDatum, batchSize int, fc func(tx gen.Dao, batch int) error) error
+	Scopes(funcs ...func(gen.Dao) gen.Dao) ILiveDataDo
+	Unscoped() ILiveDataDo
+	Create(values ...*model.LiveData) error
+	CreateInBatches(values []*model.LiveData, batchSize int) error
+	Save(values ...*model.LiveData) error
+	First() (*model.LiveData, error)
+	Take() (*model.LiveData, error)
+	Last() (*model.LiveData, error)
+	Find() ([]*model.LiveData, error)
+	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.LiveData, err error)
+	FindInBatches(result *[]*model.LiveData, batchSize int, fc func(tx gen.Dao, batch int) error) error
 	Pluck(column field.Expr, dest interface{}) error
-	Delete(...*model.LiveDatum) (info gen.ResultInfo, err error)
+	Delete(...*model.LiveData) (info gen.ResultInfo, err error)
 	Update(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
 	UpdateSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
 	Updates(value interface{}) (info gen.ResultInfo, err error)
@@ -204,163 +243,163 @@ type ILiveDatumDo interface {
 	UpdateColumnSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
 	UpdateColumns(value interface{}) (info gen.ResultInfo, err error)
 	UpdateFrom(q gen.SubQuery) gen.Dao
-	Attrs(attrs ...field.AssignExpr) ILiveDatumDo
-	Assign(attrs ...field.AssignExpr) ILiveDatumDo
-	Joins(fields ...field.RelationField) ILiveDatumDo
-	Preload(fields ...field.RelationField) ILiveDatumDo
-	FirstOrInit() (*model.LiveDatum, error)
-	FirstOrCreate() (*model.LiveDatum, error)
-	FindByPage(offset int, limit int) (result []*model.LiveDatum, count int64, err error)
+	Attrs(attrs ...field.AssignExpr) ILiveDataDo
+	Assign(attrs ...field.AssignExpr) ILiveDataDo
+	Joins(fields ...field.RelationField) ILiveDataDo
+	Preload(fields ...field.RelationField) ILiveDataDo
+	FirstOrInit() (*model.LiveData, error)
+	FirstOrCreate() (*model.LiveData, error)
+	FindByPage(offset int, limit int) (result []*model.LiveData, count int64, err error)
 	ScanByPage(result interface{}, offset int, limit int) (count int64, err error)
 	Scan(result interface{}) (err error)
-	Returning(value interface{}, columns ...string) ILiveDatumDo
+	Returning(value interface{}, columns ...string) ILiveDataDo
 	UnderlyingDB() *gorm.DB
 	schema.Tabler
 }
 
-func (l liveDatumDo) Debug() ILiveDatumDo {
+func (l liveDataDo) Debug() ILiveDataDo {
 	return l.withDO(l.DO.Debug())
 }
 
-func (l liveDatumDo) WithContext(ctx context.Context) ILiveDatumDo {
+func (l liveDataDo) WithContext(ctx context.Context) ILiveDataDo {
 	return l.withDO(l.DO.WithContext(ctx))
 }
 
-func (l liveDatumDo) ReadDB() ILiveDatumDo {
+func (l liveDataDo) ReadDB() ILiveDataDo {
 	return l.Clauses(dbresolver.Read)
 }
 
-func (l liveDatumDo) WriteDB() ILiveDatumDo {
+func (l liveDataDo) WriteDB() ILiveDataDo {
 	return l.Clauses(dbresolver.Write)
 }
 
-func (l liveDatumDo) Session(config *gorm.Session) ILiveDatumDo {
+func (l liveDataDo) Session(config *gorm.Session) ILiveDataDo {
 	return l.withDO(l.DO.Session(config))
 }
 
-func (l liveDatumDo) Clauses(conds ...clause.Expression) ILiveDatumDo {
+func (l liveDataDo) Clauses(conds ...clause.Expression) ILiveDataDo {
 	return l.withDO(l.DO.Clauses(conds...))
 }
 
-func (l liveDatumDo) Returning(value interface{}, columns ...string) ILiveDatumDo {
+func (l liveDataDo) Returning(value interface{}, columns ...string) ILiveDataDo {
 	return l.withDO(l.DO.Returning(value, columns...))
 }
 
-func (l liveDatumDo) Not(conds ...gen.Condition) ILiveDatumDo {
+func (l liveDataDo) Not(conds ...gen.Condition) ILiveDataDo {
 	return l.withDO(l.DO.Not(conds...))
 }
 
-func (l liveDatumDo) Or(conds ...gen.Condition) ILiveDatumDo {
+func (l liveDataDo) Or(conds ...gen.Condition) ILiveDataDo {
 	return l.withDO(l.DO.Or(conds...))
 }
 
-func (l liveDatumDo) Select(conds ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) Select(conds ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.Select(conds...))
 }
 
-func (l liveDatumDo) Where(conds ...gen.Condition) ILiveDatumDo {
+func (l liveDataDo) Where(conds ...gen.Condition) ILiveDataDo {
 	return l.withDO(l.DO.Where(conds...))
 }
 
-func (l liveDatumDo) Order(conds ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) Order(conds ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.Order(conds...))
 }
 
-func (l liveDatumDo) Distinct(cols ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) Distinct(cols ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.Distinct(cols...))
 }
 
-func (l liveDatumDo) Omit(cols ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) Omit(cols ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.Omit(cols...))
 }
 
-func (l liveDatumDo) Join(table schema.Tabler, on ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) Join(table schema.Tabler, on ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.Join(table, on...))
 }
 
-func (l liveDatumDo) LeftJoin(table schema.Tabler, on ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) LeftJoin(table schema.Tabler, on ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.LeftJoin(table, on...))
 }
 
-func (l liveDatumDo) RightJoin(table schema.Tabler, on ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) RightJoin(table schema.Tabler, on ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.RightJoin(table, on...))
 }
 
-func (l liveDatumDo) Group(cols ...field.Expr) ILiveDatumDo {
+func (l liveDataDo) Group(cols ...field.Expr) ILiveDataDo {
 	return l.withDO(l.DO.Group(cols...))
 }
 
-func (l liveDatumDo) Having(conds ...gen.Condition) ILiveDatumDo {
+func (l liveDataDo) Having(conds ...gen.Condition) ILiveDataDo {
 	return l.withDO(l.DO.Having(conds...))
 }
 
-func (l liveDatumDo) Limit(limit int) ILiveDatumDo {
+func (l liveDataDo) Limit(limit int) ILiveDataDo {
 	return l.withDO(l.DO.Limit(limit))
 }
 
-func (l liveDatumDo) Offset(offset int) ILiveDatumDo {
+func (l liveDataDo) Offset(offset int) ILiveDataDo {
 	return l.withDO(l.DO.Offset(offset))
 }
 
-func (l liveDatumDo) Scopes(funcs ...func(gen.Dao) gen.Dao) ILiveDatumDo {
+func (l liveDataDo) Scopes(funcs ...func(gen.Dao) gen.Dao) ILiveDataDo {
 	return l.withDO(l.DO.Scopes(funcs...))
 }
 
-func (l liveDatumDo) Unscoped() ILiveDatumDo {
+func (l liveDataDo) Unscoped() ILiveDataDo {
 	return l.withDO(l.DO.Unscoped())
 }
 
-func (l liveDatumDo) Create(values ...*model.LiveDatum) error {
+func (l liveDataDo) Create(values ...*model.LiveData) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return l.DO.Create(values)
 }
 
-func (l liveDatumDo) CreateInBatches(values []*model.LiveDatum, batchSize int) error {
+func (l liveDataDo) CreateInBatches(values []*model.LiveData, batchSize int) error {
 	return l.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (l liveDatumDo) Save(values ...*model.LiveDatum) error {
+func (l liveDataDo) Save(values ...*model.LiveData) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return l.DO.Save(values)
 }
 
-func (l liveDatumDo) First() (*model.LiveDatum, error) {
+func (l liveDataDo) First() (*model.LiveData, error) {
 	if result, err := l.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LiveDatum), nil
+		return result.(*model.LiveData), nil
 	}
 }
 
-func (l liveDatumDo) Take() (*model.LiveDatum, error) {
+func (l liveDataDo) Take() (*model.LiveData, error) {
 	if result, err := l.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LiveDatum), nil
+		return result.(*model.LiveData), nil
 	}
 }
 
-func (l liveDatumDo) Last() (*model.LiveDatum, error) {
+func (l liveDataDo) Last() (*model.LiveData, error) {
 	if result, err := l.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LiveDatum), nil
+		return result.(*model.LiveData), nil
 	}
 }
 
-func (l liveDatumDo) Find() ([]*model.LiveDatum, error) {
+func (l liveDataDo) Find() ([]*model.LiveData, error) {
 	result, err := l.DO.Find()
-	return result.([]*model.LiveDatum), err
+	return result.([]*model.LiveData), err
 }
 
-func (l liveDatumDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.LiveDatum, err error) {
-	buf := make([]*model.LiveDatum, 0, batchSize)
+func (l liveDataDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.LiveData, err error) {
+	buf := make([]*model.LiveData, 0, batchSize)
 	err = l.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -368,49 +407,49 @@ func (l liveDatumDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) e
 	return results, err
 }
 
-func (l liveDatumDo) FindInBatches(result *[]*model.LiveDatum, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (l liveDataDo) FindInBatches(result *[]*model.LiveData, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return l.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (l liveDatumDo) Attrs(attrs ...field.AssignExpr) ILiveDatumDo {
+func (l liveDataDo) Attrs(attrs ...field.AssignExpr) ILiveDataDo {
 	return l.withDO(l.DO.Attrs(attrs...))
 }
 
-func (l liveDatumDo) Assign(attrs ...field.AssignExpr) ILiveDatumDo {
+func (l liveDataDo) Assign(attrs ...field.AssignExpr) ILiveDataDo {
 	return l.withDO(l.DO.Assign(attrs...))
 }
 
-func (l liveDatumDo) Joins(fields ...field.RelationField) ILiveDatumDo {
+func (l liveDataDo) Joins(fields ...field.RelationField) ILiveDataDo {
 	for _, _f := range fields {
 		l = *l.withDO(l.DO.Joins(_f))
 	}
 	return &l
 }
 
-func (l liveDatumDo) Preload(fields ...field.RelationField) ILiveDatumDo {
+func (l liveDataDo) Preload(fields ...field.RelationField) ILiveDataDo {
 	for _, _f := range fields {
 		l = *l.withDO(l.DO.Preload(_f))
 	}
 	return &l
 }
 
-func (l liveDatumDo) FirstOrInit() (*model.LiveDatum, error) {
+func (l liveDataDo) FirstOrInit() (*model.LiveData, error) {
 	if result, err := l.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LiveDatum), nil
+		return result.(*model.LiveData), nil
 	}
 }
 
-func (l liveDatumDo) FirstOrCreate() (*model.LiveDatum, error) {
+func (l liveDataDo) FirstOrCreate() (*model.LiveData, error) {
 	if result, err := l.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LiveDatum), nil
+		return result.(*model.LiveData), nil
 	}
 }
 
-func (l liveDatumDo) FindByPage(offset int, limit int) (result []*model.LiveDatum, count int64, err error) {
+func (l liveDataDo) FindByPage(offset int, limit int) (result []*model.LiveData, count int64, err error) {
 	result, err = l.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -425,7 +464,7 @@ func (l liveDatumDo) FindByPage(offset int, limit int) (result []*model.LiveDatu
 	return
 }
 
-func (l liveDatumDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+func (l liveDataDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
 	count, err = l.Count()
 	if err != nil {
 		return
@@ -435,15 +474,15 @@ func (l liveDatumDo) ScanByPage(result interface{}, offset int, limit int) (coun
 	return
 }
 
-func (l liveDatumDo) Scan(result interface{}) (err error) {
+func (l liveDataDo) Scan(result interface{}) (err error) {
 	return l.DO.Scan(result)
 }
 
-func (l liveDatumDo) Delete(models ...*model.LiveDatum) (result gen.ResultInfo, err error) {
+func (l liveDataDo) Delete(models ...*model.LiveData) (result gen.ResultInfo, err error) {
 	return l.DO.Delete(models)
 }
 
-func (l *liveDatumDo) withDO(do gen.Dao) *liveDatumDo {
+func (l *liveDataDo) withDO(do gen.Dao) *liveDataDo {
 	l.DO = *do.(*gen.DO)
 	return l
 }

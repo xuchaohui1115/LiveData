@@ -48,9 +48,16 @@ DROP TABLE IF EXISTS `live_data`;
 CREATE TABLE `live_data` (
    `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
    `host_nickname` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '主播昵称',
+   `tb_account` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '淘宝账号',
+   `mcn_name` VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'MCN名称',
+   `phone` VARCHAR(15) DEFAULT '' COMMENT '手机号码',
+   `contact_person` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '对接人',
+   `users_count` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '在线人数',
    `host_id` BIGINT NOT NULL DEFAULT 0 COMMENT '主播ID',
+   `uid` BIGINT NOT NULL DEFAULT 0 COMMENT 'uid',
    `live_status` ENUM('ongoing', 'completed', 'paused') NOT NULL COMMENT '直播状态',
    `host_status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active' COMMENT '主播状态',
+   `login_status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active' COMMENT '登录状态',
    `remarks` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '备注',
    `live_duration` INT NOT NULL DEFAULT 0 COMMENT '直播时长（以分钟为单位）',
    `payment_amount` DECIMAL(10, 2) NOT NULL DEFAULT 0.00 COMMENT '支付金额',
@@ -60,8 +67,11 @@ CREATE TABLE `live_data` (
    `transaction_count` INT NOT NULL DEFAULT 0 COMMENT '成交人数',
    `transaction_items` INT NOT NULL DEFAULT 0 COMMENT '成交件数',
    `yesterday_sales` DECIMAL(10, 2) NOT NULL DEFAULT 0.00 COMMENT '昨日成交',
+   `all_sales` DECIMAL(10, 2) NOT NULL DEFAULT 0.00 COMMENT '总成交',
+   `month_sales` DECIMAL(10, 2) NOT NULL DEFAULT 0.00 COMMENT '月销售',
    `pause_count` INT NOT NULL DEFAULT 0 COMMENT '暂停次数',
    `pause_record_id` BIGINT NOT NULL DEFAULT 0 COMMENT '暂停记录表ID，用于关联',
+   `live_room_id` BIGINT NOT NULL DEFAULT 0 COMMENT '直播间ID，主键',
    `created_at` BIGINT NOT NULL DEFAULT 0 COMMENT '创建时间（Unix 时间戳）',
    `updated_at` BIGINT NOT NULL DEFAULT 0 COMMENT '修改时间（Unix 时间戳）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='直播数据表';

@@ -4,31 +4,41 @@
 
 package model
 
-const TableNameLiveDatum = "live_data"
+const TableNameLiveData = "live_data"
 
 // LiveDatum 直播数据表
-type LiveDatum struct {
-	ID               int64   `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:主键ID" json:"id,string"`                    // 主键ID
-	HostNickname     string  `gorm:"column:host_nickname;type:varchar(50);not null;comment:主播昵称" json:"hostNickname"`                          // 主播昵称
-	HostID           int64   `gorm:"column:host_id;type:bigint(20);not null;comment:主播ID" json:"hostId"`                                       // 主播ID
-	LiveStatus       string  `gorm:"column:live_status;type:enum('ongoing','completed','paused');not null;comment:直播状态" json:"liveStatus"`     // 直播状态
-	HostStatus       string  `gorm:"column:host_status;type:enum('active','inactive');not null;default:active;comment:主播状态" json:"hostStatus"` // 主播状态
-	Remarks          string  `gorm:"column:remarks;type:text;not null;comment:备注" json:"remarks"`                                              // 备注
-	LiveDuration     int64   `gorm:"column:live_duration;type:int(11);not null;comment:直播时长（以分钟为单位）" json:"liveDuration"`                      // 直播时长（以分钟为单位）
-	PaymentAmount    float64 `gorm:"column:payment_amount;type:decimal(10,2);not null;default:0.00;comment:支付金额" json:"paymentAmount"`         // 支付金额
-	ViewCount        int64   `gorm:"column:view_count;type:int(11);not null;comment:观看次数" json:"viewCount"`                                    // 观看次数
-	ClickThroughRate float64 `gorm:"column:click_through_rate;type:decimal(5,2);not null;default:0.00;comment:点击率" json:"clickThroughRate"`    // 点击率
-	ConversionRate   float64 `gorm:"column:conversion_rate;type:decimal(5,2);not null;default:0.00;comment:成交率" json:"conversionRate"`         // 成交率
-	TransactionCount int64   `gorm:"column:transaction_count;type:int(11);not null;comment:成交人数" json:"transactionCount"`                      // 成交人数
-	TransactionItems int64   `gorm:"column:transaction_items;type:int(11);not null;comment:成交件数" json:"transactionItems"`                      // 成交件数
-	YesterdaySales   float64 `gorm:"column:yesterday_sales;type:decimal(10,2);not null;default:0.00;comment:昨日成交" json:"yesterdaySales"`       // 昨日成交
-	PauseCount       int64   `gorm:"column:pause_count;type:int(11);not null;comment:暂停次数" json:"pauseCount"`                                  // 暂停次数
-	PauseRecordID    int64   `gorm:"column:pause_record_id;type:bigint(20);not null;comment:暂停记录表ID，用于关联" json:"pauseRecordId"`                // 暂停记录表ID，用于关联
-	CreatedAt        int64   `gorm:"column:created_at;comment:创建时间" json:"createdAt"`                                                          // 创建时间（Unix 时间戳）
-	UpdatedAt        int64   `gorm:"column:updated_at;comment:更新时间" json:"updatedAt"`                                                          // 修改时间（Unix 时间戳）
+type LiveData struct {
+	ID               int64   `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:主键ID" json:"id,string"`                      // 主键ID
+	HostNickname     string  `gorm:"column:host_nickname;type:varchar(50);not null;comment:主播昵称" json:"hostNickname"`                            // 主播昵称
+	TbAccount        string  `gorm:"column:tb_account;type:varchar(50);not null;comment:淘宝账号" json:"tbAccount"`                                  // 淘宝账号
+	McnName          string  `gorm:"column:mcn_name;type:varchar(50);not null;comment:MCN名称" json:"mcnName"`                                     // MCN名称
+	Phone            string  `gorm:"column:phone;type:varchar(15);comment:手机号码" json:"phone"`                                                    // 手机号码
+	ContactPerson    string  `gorm:"column:contact_person;type:varchar(50);not null;comment:对接人" json:"contactPerson"`                           // 对接人
+	UsersCount       string  `gorm:"column:users_count;type:varchar(50);not null;comment:在线人数" json:"usersCount"`                                // 在线人数
+	HostID           int64   `gorm:"column:host_id;type:bigint(20);not null;comment:主播ID" json:"hostId"`                                         // 主播ID
+	UID              int64   `gorm:"column:uid;type:bigint(20);not null;comment:uid" json:"uid"`                                                 // uid
+	LiveStatus       string  `gorm:"column:live_status;type:enum('ongoing','completed','paused');not null;comment:直播状态" json:"liveStatus"`       // 直播状态
+	HostStatus       string  `gorm:"column:host_status;type:enum('active','inactive');not null;default:active;comment:主播状态" json:"hostStatus"`   // 主播状态
+	LoginStatus      string  `gorm:"column:login_status;type:enum('active','inactive');not null;default:active;comment:登录状态" json:"loginStatus"` // 登录状态
+	Remarks          string  `gorm:"column:remarks;type:text;not null;comment:备注" json:"remarks"`                                                // 备注
+	LiveDuration     int64   `gorm:"column:live_duration;type:int(11);not null;comment:直播时长（以分钟为单位）" json:"liveDuration"`                        // 直播时长（以分钟为单位）
+	PaymentAmount    float64 `gorm:"column:payment_amount;type:decimal(10,2);not null;default:0.00;comment:支付金额" json:"paymentAmount"`           // 支付金额
+	ViewCount        int64   `gorm:"column:view_count;type:int(11);not null;comment:观看次数" json:"viewCount"`                                      // 观看次数
+	ClickThroughRate float64 `gorm:"column:click_through_rate;type:decimal(5,2);not null;default:0.00;comment:点击率" json:"clickThroughRate"`      // 点击率
+	ConversionRate   float64 `gorm:"column:conversion_rate;type:decimal(5,2);not null;default:0.00;comment:成交率" json:"conversionRate"`           // 成交率
+	TransactionCount int64   `gorm:"column:transaction_count;type:int(11);not null;comment:成交人数" json:"transactionCount"`                        // 成交人数
+	TransactionItems int64   `gorm:"column:transaction_items;type:int(11);not null;comment:成交件数" json:"transactionItems"`                        // 成交件数
+	YesterdaySales   float64 `gorm:"column:yesterday_sales;type:decimal(10,2);not null;default:0.00;comment:昨日成交" json:"yesterdaySales"`         // 昨日成交
+	AllSales         float64 `gorm:"column:all_sales;type:decimal(10,2);not null;default:0.00;comment:总成交" json:"allSales"`                      // 总成交
+	MonthSales       float64 `gorm:"column:month_sales;type:decimal(10,2);not null;default:0.00;comment:月销售" json:"monthSales"`                  // 月销售
+	PauseCount       int64   `gorm:"column:pause_count;type:int(11);not null;comment:暂停次数" json:"pauseCount"`                                    // 暂停次数
+	PauseRecordID    int64   `gorm:"column:pause_record_id;type:bigint(20);not null;comment:暂停记录表ID，用于关联" json:"pauseRecordId"`                  // 暂停记录表ID，用于关联
+	LiveRoomID       int64   `gorm:"column:live_room_id;type:bigint(20);not null;comment:直播间ID，主键" json:"liveRoomId"`                            // 直播间ID，主键
+	CreatedAt        int64   `gorm:"column:created_at;comment:创建时间" json:"createdAt"`                                                            // 创建时间（Unix 时间戳）
+	UpdatedAt        int64   `gorm:"column:updated_at;comment:更新时间" json:"updatedAt"`                                                            // 修改时间（Unix 时间戳）
 }
 
 // TableName LiveDatum's table name
-func (*LiveDatum) TableName() string {
-	return TableNameLiveDatum
+func (*LiveData) TableName() string {
+	return TableNameLiveData
 }
