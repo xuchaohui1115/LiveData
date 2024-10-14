@@ -6,7 +6,6 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap/zapcore"
-	"os"
 )
 
 // 系统配置，对应yml
@@ -26,16 +25,16 @@ type config struct {
 
 // 设置读取配置信息
 func InitConfig() {
-	workDir, err := os.Getwd()
-	if err != nil {
-		panic(fmt.Errorf("读取应用目录失败:%s \n", err))
-	}
+	//workDir, err := os.Getwd()
+	//if err != nil {
+	//	panic(fmt.Errorf("读取应用目录失败:%s \n", err))
+	//}
 
 	viper.SetConfigName("config")
 	viper.SetConfigType("yml")
-	viper.AddConfigPath(workDir + "./")
+	viper.AddConfigPath("./")
 	// 读取配置信息
-	err = viper.ReadInConfig()
+	err := viper.ReadInConfig()
 
 	// 热更新配置
 	viper.WatchConfig()
