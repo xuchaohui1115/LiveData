@@ -25,15 +25,18 @@ func InitCasbinEnforcer() {
 func mysqlCasbin() (*casbin.Enforcer, error) {
 	a, err := gormadapter.NewAdapterByDB(DB)
 	if err != nil {
+		Log.Error(err)
 		return nil, err
 	}
 	e, err := casbin.NewEnforcer(config.Conf.Casbin.ModelPath, a)
 	if err != nil {
+		Log.Error(err)
 		return nil, err
 	}
-
+	Log.Debug(e)
 	err = e.LoadPolicy()
 	if err != nil {
+		Log.Error(err)
 		return nil, err
 	}
 	return e, nil

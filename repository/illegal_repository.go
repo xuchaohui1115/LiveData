@@ -68,7 +68,7 @@ func (ar IllegalRepository) GetIllegal(req *vo.IllegalRequest) ([]*model.Violati
 	if pageNum > 0 && pageSize > 0 {
 		err = db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Preload("Roles").Find(&list).Error
 	} else {
-		err = db.Preload("Roles").Find(&list).Error
+		err = db.Find(&list).Error
 	}
 	return list, total, err
 }

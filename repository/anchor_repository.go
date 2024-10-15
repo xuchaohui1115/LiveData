@@ -42,7 +42,7 @@ func (ar AnchorRepository) GetGetAnchor(req *vo.AnchorListRequest) ([]*model.Liv
 	}
 	nickname := strings.TrimSpace(req.Nickname)
 	if nickname != "" {
-		db = db.Where("nickname LIKE ?", fmt.Sprintf("%%%s%%", nickname))
+		db = db.Where("host_nickname LIKE ?", fmt.Sprintf("%%%s%%", nickname))
 	}
 	mobile := strings.TrimSpace(req.Mobile)
 	if mobile != "" {
@@ -52,10 +52,10 @@ func (ar AnchorRepository) GetGetAnchor(req *vo.AnchorListRequest) ([]*model.Liv
 	if uid != 0 {
 		db = db.Where("uid = ?", uid)
 	}
-	status := req.Status
-	if status != 0 {
-		db = db.Where("status = ?", status)
-	}
+	//status := req.Status
+	//if status != 0 {
+	//	db = db.Where("status = ?", status)
+	//}
 	loginStatus := req.LoginStatus
 	if loginStatus != 0 {
 		db = db.Where("login_status = ?", loginStatus)
@@ -78,7 +78,7 @@ func (ar AnchorRepository) GetGetAnchor(req *vo.AnchorListRequest) ([]*model.Liv
 	if pageNum > 0 && pageSize > 0 {
 		err = db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Preload("Roles").Find(&list).Error
 	} else {
-		err = db.Preload("Roles").Find(&list).Error
+		err = db.Find(&list).Error
 	}
 	return list, total, err
 }

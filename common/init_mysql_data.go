@@ -163,6 +163,19 @@ func InitData() {
 			Roles:     roles[:2],
 			Creator:   "系统",
 		},
+		{
+			ID:        8,
+			Name:      "Anchor",
+			Title:     "主播管理",
+			Icon:      componentStr,
+			Path:      "/system",
+			Component: "Layout",
+			Redirect:  peoplesStr,
+			Sort:      10,
+			ParentID:  0,
+			Roles:     roles[:2],
+			Creator:   "系统",
+		},
 	}
 	for _, menu := range menus {
 		err := DB.First(&menu, menu.ID).Error
@@ -461,6 +474,20 @@ func InitData() {
 			Path:     "/log/operation/delete/batch",
 			Category: "log",
 			Desc:     "批量删除操作日志",
+			Creator:  "系统",
+		},
+		{
+			Method:   "GET",
+			Path:     "/anchor/list",
+			Category: "log",
+			Desc:     "获取主播列表",
+			Creator:  "系统",
+		},
+		{
+			Method:   "GET",
+			Path:     "/illegal/list",
+			Category: "log",
+			Desc:     "获取违规记录列表",
 			Creator:  "系统",
 		},
 	}

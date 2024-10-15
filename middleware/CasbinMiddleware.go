@@ -41,7 +41,6 @@ func CasbinMiddleware() gin.HandlerFunc {
 		obj := strings.TrimPrefix(c.FullPath(), "/"+config.Conf.System.UrlPathPrefix)
 		// 获取请求方式
 		act := c.Request.Method
-
 		isPass := check(subs, obj, act)
 		if !isPass {
 			response.Response(c, 401, 401, nil, "没有权限")
