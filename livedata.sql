@@ -5,10 +5,12 @@ CREATE TABLE `hosts` (
     `username` VARCHAR(50)  CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户名',
     `password` VARCHAR(50)  CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '密码（建议加密存储）',
     `nickname` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '昵称',
+    `manager` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '上级',
     `phone` VARCHAR(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '手机号码',
     `email` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '电子邮件',
     `profile_picture` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '头像URL',
     `bio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '个人简介',
+    `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active' COMMENT '状态',
     `followers_count` int NOT NULL DEFAULT 0 COMMENT '粉丝数量',
     `created_at` BIGINT NOT NULL DEFAULT '0' COMMENT '创建时间（Unix 时间戳）',
     `updated_at` BIGINT NOT NULL DEFAULT '0' COMMENT '更新时间（Unix 时间戳）',
@@ -105,6 +107,24 @@ CREATE TABLE `super_admins` (
    `created_at` BIGINT NOT NULL DEFAULT 0 COMMENT '创建时间（Unix 时间戳）',
    `updated_at` BIGINT NOT NULL DEFAULT 0 COMMENT '修改时间（Unix 时间戳）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='超级管理员表';
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+   `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+   `created_at` BIGINT NOT NULL DEFAULT '0' COMMENT '创建时间（Unix 时间戳）',
+   `updated_at` BIGINT NOT NULL DEFAULT '0'  COMMENT '更新时间',
+   `username` varchar(20) NOT NULL,
+   `password` varchar(255) NOT NULL,
+   `manager` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '上级',
+   `bio` varchar(255) NOT NULL COMMENT '个人简介',
+   `followers_count` int NOT NULL DEFAULT 0 COMMENT '粉丝数量',
+   `mobile` varchar(11) NOT NULL,
+   `avatar` varchar(255) DEFAULT NULL,
+   `nickname` varchar(20) DEFAULT NULL,
+   `introduction` varchar(255) DEFAULT NULL,
+   `status` tinyint(1) DEFAULT '1' COMMENT '''1正常, 2禁用''',
+   `creator` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 创建热浪引擎热门商品表
 -- (请在此处添加热浪引擎热门商品表的创建语句)

@@ -128,6 +128,13 @@ func (uc UserController) ChangePwd(c *gin.Context) {
 
 // 创建用户
 func (uc UserController) CreateUser(c *gin.Context) {
+	userLogin, err := uc.UserRepository.GetCurrentUser(c)
+	if err != nil {
+		response.Fail(c, nil, "获取当前用户信息失败: "+err.Error())
+		return
+	}
+	userInfoDto := dto.ToUserInfoDto(userLogin)
+
 	var req vo.CreateUserRequest
 	// 参数绑定
 	if err := c.ShouldBind(&req); err != nil {
@@ -203,6 +210,7 @@ func (uc UserController) CreateUser(c *gin.Context) {
 		Status:       int64(req.Status),
 		Creator:      ctxUser.Username,
 		Roles:        roles,
+		Manager:      userInfoDto.Username,
 	}
 
 	err = uc.UserRepository.CreateUser(&user)

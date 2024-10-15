@@ -9,7 +9,7 @@ import (
 )
 
 type IIllegalRepository interface {
-	GetIllegal(v *vo.IllegalRequest) ([]*model.Violation, int64, error) // 获取违规列表
+	GetIllegal(v *vo.IllegalRequest) ([]*model.Violations, int64, error) // 获取违规列表
 }
 
 type IllegalRepository struct {
@@ -21,9 +21,9 @@ func NewIllegalRepository() IIllegalRepository {
 }
 
 // 获取主播列表
-func (ar IllegalRepository) GetIllegal(req *vo.IllegalRequest) ([]*model.Violation, int64, error) {
-	var list []*model.Violation
-	db := common.DB.Model(&model.Violation{}).Order("created_at DESC")
+func (ar IllegalRepository) GetIllegal(req *vo.IllegalRequest) ([]*model.Violations, int64, error) {
+	var list []*model.Violations
+	db := common.DB.Model(&model.Violations{}).Order("created_at DESC")
 	/*
 		Nickname      string `json:"nickname" form:"nickname"` 主播昵称/UID
 		IllegalNum    string `json:"illegalNum" form:"illegalNum"`
