@@ -76,7 +76,8 @@ func (ar AnchorRepository) GetGetAnchor(req *vo.AnchorListRequest) ([]*model.Liv
 	pageNum := int(req.PageNum)
 	pageSize := int(req.PageSize)
 	if pageNum > 0 && pageSize > 0 {
-		err = db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Preload("Roles").Find(&list).Error
+		//err = db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Preload("Roles").Find(&list).Error
+		err = db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&list).Error
 	} else {
 		err = db.Find(&list).Error
 	}
