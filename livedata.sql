@@ -56,6 +56,7 @@ CREATE TABLE `live_data` (
    `host_nickname` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '主播昵称',
    `tb_account` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '淘宝账号',
    `mcn_name` VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'MCN名称',
+   `operation_name` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '运营人员',
    `phone` VARCHAR(15) DEFAULT '' COMMENT '手机号码',
    `contact_person` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '对接人',
    `users_count` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '在线人数',

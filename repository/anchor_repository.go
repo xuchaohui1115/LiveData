@@ -48,6 +48,10 @@ func (ar AnchorRepository) GetGetAnchor(req *vo.AnchorListRequest) ([]*model.Liv
 	if mobile != "" {
 		db = db.Where("phone LIKE ?", fmt.Sprintf("%%%s%%", mobile))
 	}
+	operationName := strings.TrimSpace(req.OperationName)
+	if operationName != "" {
+		db = db.Where("operation_name LIKE ?", fmt.Sprintf("%%%s%%", operationName))
+	}
 	uid := req.Uid
 	if uid != 0 {
 		db = db.Where("uid = ?", uid)

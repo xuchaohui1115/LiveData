@@ -54,6 +54,7 @@ func newLiveData(db *gorm.DB, opts ...gen.DOOption) liveData {
 	_liveData.LiveRoomID = field.NewInt64(tableName, "live_room_id")
 	_liveData.CreatedAt = field.NewInt64(tableName, "created_at")
 	_liveData.UpdatedAt = field.NewInt64(tableName, "updated_at")
+	_liveData.OperationName = field.NewString(tableName, "operation_name")
 
 	_liveData.fillFieldMap()
 
@@ -93,6 +94,7 @@ type liveData struct {
 	LiveRoomID       field.Int64   // 直播间ID，主键
 	CreatedAt        field.Int64   // 创建时间（Unix 时间戳）
 	UpdatedAt        field.Int64   // 修改时间（Unix 时间戳）
+	OperationName    field.String  // 运营人员
 
 	fieldMap map[string]field.Expr
 }
@@ -137,6 +139,7 @@ func (l *liveData) updateTableName(table string) *liveData {
 	l.LiveRoomID = field.NewInt64(table, "live_room_id")
 	l.CreatedAt = field.NewInt64(table, "created_at")
 	l.UpdatedAt = field.NewInt64(table, "updated_at")
+	l.OperationName = field.NewString(table, "operation_name")
 
 	l.fillFieldMap()
 
@@ -153,7 +156,7 @@ func (l *liveData) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (l *liveData) fillFieldMap() {
-	l.fieldMap = make(map[string]field.Expr, 28)
+	l.fieldMap = make(map[string]field.Expr, 29)
 	l.fieldMap["id"] = l.ID
 	l.fieldMap["host_nickname"] = l.HostNickname
 	l.fieldMap["tb_account"] = l.TbAccount
@@ -182,6 +185,7 @@ func (l *liveData) fillFieldMap() {
 	l.fieldMap["live_room_id"] = l.LiveRoomID
 	l.fieldMap["created_at"] = l.CreatedAt
 	l.fieldMap["updated_at"] = l.UpdatedAt
+	l.fieldMap["operation_name"] = l.OperationName
 }
 
 func (l liveData) clone(db *gorm.DB) liveData {

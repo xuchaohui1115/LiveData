@@ -36,6 +36,7 @@ type LiveData struct {
 	LiveRoomID       int64   `gorm:"column:live_room_id;type:bigint(20);not null;comment:直播间ID，主键" json:"liveRoomId"`                            // 直播间ID，主键
 	CreatedAt        int64   `gorm:"column:created_at;comment:创建时间" json:"createdAt"`                                                            // 创建时间（Unix 时间戳）
 	UpdatedAt        int64   `gorm:"column:updated_at;comment:更新时间" json:"updatedAt"`                                                            // 修改时间（Unix 时间戳）
+	OperationName    string  `gorm:"column:operation_name;type:varchar(50);not null;comment:运营人员" json:"operationName"`                          // 运营人员
 }
 
 // TableName LiveDatum's table name
